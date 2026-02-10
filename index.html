@@ -40,17 +40,29 @@
   const echoTopup = { 66: 60, 203: 185, 335: 305, 759: 690 };
   const prices = { 66: 30, 203: 85, 335: 140, 759: 280 };
 
+  // ✅ ฟังก์ชัน generateOptions ที่แก้แล้ว
   function generateOptions(mode, target) {
     let options = [];
+    let maxBig = 0;
+
+    if (mode === "budget") {
+      maxBig = Math.floor(target / prices[759]) + 5;
+    } else if (mode === "buttons") {
+      maxBig = Math.floor(target / 759) + 5;
+    } else if (mode === "topup") {
+      maxBig = Math.floor(target / echoTopup[759]) + 5;
+    }
+
     for (let c66=0;c66<=2;c66++) {
       for (let c203=0;c203<=1;c203++) {
         for (let c335=0;c335<=1;c335++) {
-          for (let c759=0;c759<=10;c759++) {
+          for (let c759=0;c759<=maxBig;c759++) {
             let echoes = c66*66 + c203*203 + c335*335 + c759*759;
             let topup = c66*echoTopup[66] + c203*echoTopup[203] + c335*echoTopup[335] + c759*echoTopup[759];
             let price = c66*prices[66] + c203*prices[203] + c335*prices[335] + c759*prices[759];
             let desc = `${c759>0?`759x${c759} `:""}${c335>0?`335x${c335} `:""}${c203>0?`203x${c203} `:""}${c66>0?`66x${c66}`:""}`.trim();
             if (!desc) continue;
+
             if (mode==="buttons" && echoes>=target) options.push({desc,echoes,topup,price});
             if (mode==="topup" && topup>=target) options.push({desc,echoes,topup,price});
             if (mode==="budget") options.push({desc,echoes,topup,price});
@@ -93,27 +105,25 @@
       <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup}</p>`;
   }
 
- function calculateBudget() {
-  let budget = parseInt(document.getElementById("echoesInput").value);
-  if (isNaN(budget) || budget <= 0) {
-    document.getElementById("result").innerText = "กรุณากรอกงบประมาณที่ถูกต้อง";
-    return;
+  function calculateBudget() {
+    let budget = parseInt(document.getElementById("echoesInput").value);
+    if (isNaN(budget) || budget <= 0) {
+      document.getElementById("result").innerText = "กรุณากรอกงบประมาณที่ถูกต้อง";
+      return;
+    }
+    let options = generateOptions("budget", budget);
+
+    let lower = options.filter(o=>o.price<budget).sort((a,b)=>(budget-a.price)-(budget-b.price))[0];
+    let equal = options.reduce((best,o)=>Math.abs(o.price-budget)<Math.abs((best?.price||0)-budget)?o:best,null);
+    let higher = options.filter(o=>o.price>budget).sort((a,b)=>(a.price-budget)-(b.price-budget))[0];
+
+    let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th></tr></thead><tbody>";
+    if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td></tr>`;
+    if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td></tr>`;
+    if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td></tr>`;
+    html += "</tbody></table>";
+    document.getElementById("result").innerHTML = html;
   }
-  let options = generateOptions("budget", budget);
-
-  // เลือกตัวเลือกต่ำกว่า, เท่ากับ/ใกล้เคียง, สูงกว่าเล็กน้อย
-  let lower = options.filter(o=>o.price<budget).sort((a,b)=>(budget-a.price)-(budget-b.price))[0];
-  let equal = options.reduce((best,o)=>Math.abs(o.price-budget)<Math.abs((best?.price||0)-budget)?o:best,null);
-  let higher = options.filter(o=>o.price>budget).sort((a,b)=>(a.price-budget)-(b.price-budget))[0];
-
-  let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th></tr></thead><tbody>";
-  if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td></tr>`;
-  if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td></tr>`;
-  if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td></tr>`;
-  html += "</tbody></table>";
-  document.getElementById("result").innerHTML = html;
-}
-
 
   function calculate() {
     let mode = document.getElementById("modeSelect").value;
