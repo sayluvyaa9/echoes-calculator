@@ -35,6 +35,14 @@
     { echoes: 335, price: 140, max: 1 }
   ];
 
+  // mapping ยอดเติมเสียงสะท้อน
+  const echoTopup = {
+    66: 60,
+    203: 185,
+    335: 305,
+    759: 690
+  };
+
   function getBigPackPrice(count) {
     if (count > 25) return 275;
     if (count > 15) return 278;
@@ -85,9 +93,10 @@
     let bigPrice = getBigPackPrice(bigCount);
     let totalPrice = bigCount * bigPrice;
     let totalEchoes = bigCount * 759;
+    let totalTopup = bigCount * echoTopup[759];
 
     if (bigCount > 0) {
-      resultRows.push(`<tr><td>759</td><td>${bigCount}</td><td>${bigPrice}</td><td>${bigCount * bigPrice}</td></tr>`);
+      resultRows.push(`<tr><td>759</td><td>${bigCount}</td><td>${bigPrice}</td><td>${bigCount * bigPrice}</td><td>${bigCount * echoTopup[759]}</td></tr>`);
     }
 
     let remaining = needed - totalEchoes;
@@ -98,19 +107,27 @@
         bigCount += 1;
         totalPrice += fill.price;
         totalEchoes += 759;
-        resultRows.push(`<tr><td>759</td><td>1</td><td>${fill.price}</td><td>${fill.price}</td></tr>`);
+        totalTopup += echoTopup[759];
+        resultRows.push(`<tr><td>759</td><td>1</td><td>${fill.price}</td><td>${fill.price}</td><td>${echoTopup[759]}</td></tr>`);
       } else {
         if (fill.packs.c66 > 0) {
-          resultRows.push(`<tr><td>66</td><td>${fill.packs.c66}</td><td>30</td><td>${fill.packs.c66*30}</td></tr>`);
+          resultRows.push(`<tr><td>66</td><td>${fill.packs.c66}</td><td>30</td><td>${fill.packs.c66*30}</td><td>${fill.packs.c66*echoTopup[66]}</td></tr>`);
+          totalPrice += fill.packs.c66*30;
+          totalEchoes += fill.packs.c66*66;
+          totalTopup += fill.packs.c66*echoTopup[66];
         }
         if (fill.packs.c203 > 0) {
-          resultRows.push(`<tr><td>203</td><td>${fill.packs.c203}</td><td>85</td><td>${fill.packs.c203*85}</td></tr>`);
+          resultRows.push(`<tr><td>203</td><td>${fill.packs.c203}</td><td>85</td><td>${fill.packs.c203*85}</td><td>${fill.packs.c203*echoTopup[203]}</td></tr>`);
+          totalPrice += fill.packs.c203*85;
+          totalEchoes += fill.packs.c203*203;
+          totalTopup += fill.packs.c203*echoTopup[203];
         }
         if (fill.packs.c335 > 0) {
-          resultRows.push(`<tr><td>335</td><td>${fill.packs.c335}</td><td>140</td><td>${fill.packs.c335*140}</td></tr>`);
+          resultRows.push(`<tr><td>335</td><td>${fill.packs.c335}</td><td>140</td><td>${fill.packs.c335*140}</td><td>${fill.packs.c335*echoTopup[335]}</td></tr>`);
+          totalPrice += fill.packs.c335*140;
+          totalEchoes += fill.packs.c335*335;
+          totalTopup += fill.packs.c335*echoTopup[335];
         }
-        totalPrice += fill.price;
-        totalEchoes += fill.echoes;
       }
     }
 
@@ -120,7 +137,8 @@
       let extraPrice = getBigPackPrice(bigCount);
       totalPrice += extraPrice;
       totalEchoes += 759;
-      resultRows.push(`<tr><td>759</td><td>1</td><td>${extraPrice}</td><td>${extraPrice}</td></tr>`);
+      totalTopup += echoTopup[759];
+      resultRows.push(`<tr><td>759</td><td>1</td><td>${extraPrice}</td><td>${extraPrice}</td><td>${echoTopup[759]}</td></tr>`);
     }
 
     document.getElementById("result").innerHTML = `
@@ -131,6 +149,7 @@
             <th>จำนวนแพ็ก</th>
             <th>ราคา/แพ็ก</th>
             <th>รวมราคา</th>
+            <th>ยอดเติมเสียงสะท้อน</th>
           </tr>
         </thead>
         <tbody>
@@ -139,6 +158,7 @@
       </table>
       <p><strong>รวมทั้งหมด:</strong> ${totalEchoes} กระดุม</p>
       <p><strong>ราคารวม:</strong> ${totalPrice} บาท</p>
+      <p><strong>ยอดเติมเสียงสะท้อนรวม:</strong> ${totalTopup}</p>
     `;
   }
 </script>
