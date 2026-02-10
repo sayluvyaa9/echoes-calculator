@@ -58,10 +58,9 @@
       resultRows.push(`<tr><td>759</td><td>${bigCount}</td><td>${bigPrice}</td><td>${bigCount * bigPrice}</td></tr>`);
     }
 
-    // เติมเศษ
     let remaining = needed - totalEchoes;
 
-    // ถ้าเศษเยอะจนต้องใช้แพ็กเล็กหลายอัน → เพิ่มแพ็ก 759 อีกหนึ่งแทน
+    // หาว่าแพ็กเล็กไหนเติมแล้วคุ้มที่สุด
     let bestPack = null;
     for (let i = packages.length - 2; i >= 0; i--) {
       if (remaining <= packages[i].echoes) {
@@ -70,7 +69,7 @@
     }
 
     if (bestPack) {
-      // ตรวจสอบความคุ้มค่า: ถ้าใช้แพ็กเล็กหลายอันแพงกว่าซื้อ 759 → เลือก 759 แทน
+      // ถ้าใช้แพ็กเล็กแล้วราคา >= ราคาแพ็กใหญ่ → เลือกแพ็กใหญ่แทน
       if (bestPack.price >= bigPrice) {
         bigCount += 1;
         totalPrice += bigPrice;
@@ -85,9 +84,16 @@
 
     // ถ้ายังไม่ถึง → เติมด้วยแพ็กเล็กสุด
     if (totalEchoes < needed) {
-      totalPrice += packages[0].price;
-      totalEchoes += packages[0].echoes;
-      resultRows.push(`<tr><td>${packages[0].echoes}</td><td>1</td><td>${packages[0].price}</td><td>${packages[0].price}</td></tr>`);
+      if (packages[0].price >= bigPrice) {
+        bigCount += 1;
+        totalPrice += bigPrice;
+        totalEchoes += 759;
+        resultRows.push(`<tr><td>759</td><td>1</td><td>${bigPrice}</td><td>${bigPrice}</td></tr>`);
+      } else {
+        totalPrice += packages[0].price;
+        totalEchoes += packages[0].echoes;
+        resultRows.push(`<tr><td>${packages[0].echoes}</td><td>1</td><td>${packages[0].price}</td><td>${packages[0].price}</td></tr>`);
+      }
     }
 
     document.getElementById("result").innerHTML = `
