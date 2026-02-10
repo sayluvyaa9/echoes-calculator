@@ -139,8 +139,15 @@
     document.getElementById("result").innerHTML = html;
   }
 
-  function calculate() {
-    let mode = document.getElementById("modeSelect").value;
-    if (mode === "buttons") calculateButtons();
-    else if (mode === "topup") calculateTopup();
-    else calculateBudget();
+ function calculate() {
+  let mode = document.getElementById("modeSelect").value;
+  if (mode === "buttons") {
+    calculateButtons();
+  } else if (mode === "topup") {
+    calculateTopup();
+  } else {
+    calculateBudget();
+  }
+}
+
+
