@@ -117,11 +117,12 @@
     let equal = options.reduce((best,o)=>Math.abs(o.price-budget)<Math.abs((best?.price||0)-budget)?o:best,null);
     let higher = options.filter(o=>o.price>budget).sort((a,b)=>(a.price-budget)-(b.price-budget))[0];
 
-    let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th></tr></thead><tbody>";
-    if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td></tr>`;
-    if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td></tr>`;
-    if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td></tr>`;
-    html += "</tbody></table>";
+    let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th><th>กระดุมรวม</th><th>ยอดเติมเสียงสะท้อน</th></tr></thead><tbody>";
+if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td><td>${lower.echoes}</td><td>${lower.topup}</td></tr>`;
+if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td><td>${equal.echoes}</td><td>${equal.topup}</td></tr>`;
+if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td><td>${higher.echoes}</td><td>${higher.topup}</td></tr>`;
+html += "</tbody></table>";
+
     document.getElementById("result").innerHTML = html;
   }
 
@@ -135,3 +136,4 @@
 
 </body>
 </html>
+
