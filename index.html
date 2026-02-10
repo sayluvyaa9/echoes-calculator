@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>เครื่องคำนวณ Echoes</title>
+</head>
+<body>
+  <h2>คำนวณแพ็กเกจ Echoes</h2>
+  <label>จำนวนกระดุมที่ต้องการ:</label>
+  <input type="number" id="echoesInput" />
+  <button onclick="calculate()">คำนวณ</button>
+
+  <pre id="result"></pre>
+
+ <script>
+  const packages = [
+    { echoes: 66, price: 30 },
+    { echoes: 203, price: 85 },
+    { echoes: 335, price: 140 },
+    { echoes: 759, price: 280 } // base price
+  ];
+
+  function getBigPackPrice(count) {
+    if (count > 25) return 275;
+    if (count > 15) return 278;
+    return 280;
+  }
+
+  function calculate() {
+    let needed = parseInt(document.getElementById("echoesInput").value);
+    if (isNaN(needed) || needed <= 0) {
+      document.getElementById("result").innerText = "กรุณากรอกจำนวนกระดุมที่ถูกต้อง";
+      return;
+    }
+
+    let result = [];
+    let bigCount = Math.floor(needed / 759);
+    let bigPrice = getBigPackPrice(bigCount);
+    let totalPrice = bigCount * bigPrice;
+    let totalEchoes = bigCount * 759;
+    let remaining = needed - totalEchoes;
+
+    if (bigCount > 0) {
+      result.push(`759 กระดุม x ${bigCount} (แพ็กละ ${bigPrice} บาท)`);
+    }
+
+    // ใช้ greedy สำหรับแพ็กเล็ก
+    for (let i = packages.length - 2; i >= 0; i--) {
+      let count = Math.floor(remaining / packages[i].echoes);
+      if (count > 0) {
+        totalPrice += count * packages[i].price;
+        totalEchoes += count * packages[i].echoes;
+        result.push(`${packages[i].echoes} กระดุม x ${count} (แพ็กละ ${packages[i].price} บาท)`);
+        remaining -= count * packages[i].echoes;
+      }
+    }
+
+    // ถ้ายังไม่ถึงจำนวนที่ลูกค้าต้องการ → บวกเพิ่มอีก 1 แพ็กเล็กสุด
+    if (totalEchoes < needed) {
+      totalPrice += packages[0].price;
+      totalEchoes += packages[0].echoes;
+      result.push(`${packages[0].echoes} กระดุม x 1 (แพ็กละ ${packages[0].price} บาท)`);
+    }
+
+    document.getElementById("result").innerText =
+      `แพ็กเกจที่ต้องซื้อ:\n${result.join("\n")}\n\nรวมทั้งหมด: ${totalEchoes} กระดุม\nราคารวม: ${totalPrice} บาท`;
+  }
+</script>
