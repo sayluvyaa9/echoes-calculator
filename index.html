@@ -60,39 +60,37 @@
 
     let remaining = needed - totalEchoes;
 
-    // หาว่าแพ็กเล็กไหนเติมแล้วคุ้มที่สุด
-    let bestPack = null;
-    for (let i = packages.length - 2; i >= 0; i--) {
-      if (remaining <= packages[i].echoes) {
-        bestPack = packages[i];
+    // ถ้าเศษยังเหลือ
+    if (remaining > 0) {
+      // หาว่าแพ็กเล็กไหนเติมแล้วคุ้มที่สุด
+      let bestPack = null;
+      for (let i = packages.length - 2; i >= 0; i--) {
+        if (remaining <= packages[i].echoes) {
+          bestPack = packages[i];
+        }
       }
-    }
 
-    if (bestPack) {
-      // ถ้าใช้แพ็กเล็กแล้วราคา >= ราคาแพ็กใหญ่ → เลือกแพ็กใหญ่แทน
-      if (bestPack.price >= bigPrice) {
-        bigCount += 1;
-        totalPrice += bigPrice;
-        totalEchoes += 759;
-        resultRows.push(`<tr><td>759</td><td>1</td><td>${bigPrice}</td><td>${bigPrice}</td></tr>`);
-      } else {
-        totalPrice += bestPack.price;
-        totalEchoes += bestPack.echoes;
-        resultRows.push(`<tr><td>${bestPack.echoes}</td><td>1</td><td>${bestPack.price}</td><td>${bestPack.price}</td></tr>`);
+      if (bestPack) {
+        // ถ้าใช้แพ็กเล็กแล้วราคา >= ราคาแพ็กใหญ่ → เลือกแพ็กใหญ่แทน
+        if (bestPack.price >= bigPrice) {
+          bigCount += 1;
+          totalPrice += bigPrice;
+          totalEchoes += 759;
+          resultRows.push(`<tr><td>759</td><td>1</td><td>${bigPrice}</td><td>${bigPrice}</td></tr>`);
+        } else {
+          totalPrice += bestPack.price;
+          totalEchoes += bestPack.echoes;
+          resultRows.push(`<tr><td>${bestPack.echoes}</td><td>1</td><td>${bestPack.price}</td><td>${bestPack.price}</td></tr>`);
+        }
       }
-    }
 
-    // ถ้ายังไม่ถึง → เติมด้วยแพ็กเล็กสุด
-    if (totalEchoes < needed) {
-      if (packages[0].price >= bigPrice) {
+      // ถ้ายังไม่ถึง → เพิ่มแพ็ก 759 อีกหนึ่งทันที
+      if (totalEchoes < needed) {
         bigCount += 1;
-        totalPrice += bigPrice;
+        let extraPrice = getBigPackPrice(bigCount);
+        totalPrice += extraPrice;
         totalEchoes += 759;
-        resultRows.push(`<tr><td>759</td><td>1</td><td>${bigPrice}</td><td>${bigPrice}</td></tr>`);
-      } else {
-        totalPrice += packages[0].price;
-        totalEchoes += packages[0].echoes;
-        resultRows.push(`<tr><td>${packages[0].echoes}</td><td>1</td><td>${packages[0].price}</td><td>${packages[0].price}</td></tr>`);
+        resultRows.push(`<tr><td>759</td><td>1</td><td>${extraPrice}</td><td>${extraPrice}</td></tr>`);
       }
     }
 
