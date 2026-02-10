@@ -46,26 +46,26 @@
     return 280;
   }
 
-  // ฟังก์ชันลองทุกชุดแพ็กเล็กตามกฎ
-  function trySmallPacks(target, mode="buttons") {
+  // สร้างชุดแพ็กทั้งหมดตามกฎ
+  function generateOptions(mode, target) {
     let options = [];
     for (let c66=0;c66<=2;c66++) {
       for (let c203=0;c203<=1;c203++) {
         for (let c335=0;c335<=1;c335++) {
-          let echoes = c66*66 + c203*203 + c335*335;
-          let topup = c66*echoTopup[66] + c203*echoTopup[203] + c335*echoTopup[335];
-          let price = c66*prices[66] + c203*prices[203] + c335*prices[335];
-          if (mode==="buttons" && echoes>=target) {
-            options.push({echoes,topup,price,packs:{c66,c203,c335}});
-          }
-          if (mode==="topup" && topup>=target) {
-            options.push({echoes,topup,price,packs:{c66,c203,c335}});
+          for (let c759=0;c759<=10;c759++) {
+            let echoes = c66*66 + c203*203 + c335*335 + c759*759;
+            let topup = c66*echoTopup[66] + c203*echoTopup[203] + c335*echoTopup[335] + c759*echoTopup[759];
+            let price = c66*prices[66] + c203*prices[203] + c335*prices[335] + c759*prices[759];
+            let desc = `${c759>0?`759x${c759} `:""}${c335>0?`335x${c335} `:""}${c203>0?`203x${c203} `:""}${c66>0?`66x${c66}`:""}`.trim();
+            if (!desc) continue;
+            if (mode==="buttons" && echoes>=target) options.push({desc,echoes,topup,price});
+            if (mode==="topup" && topup>=target) options.push({desc,echoes,topup,price});
+            if (mode==="budget") options.push({desc,echoes,topup,price});
           }
         }
       }
     }
-    options.sort((a,b)=>a.price-b.price);
-    return options[0]||null;
+    return options;
   }
 
   // โหมด 1: คำนวณจากจำนวนกระดุม
@@ -75,27 +75,14 @@
       document.getElementById("result").innerText = "กรุณากรอกจำนวนกระดุมที่ถูกต้อง";
       return;
     }
-    let bigCount = Math.floor(needed/759);
-    let bigPrice = getBigPackPrice(bigCount);
-    let totalPrice = bigCount*bigPrice;
-    let totalEchoes = bigCount*759;
-    let totalTopup = bigCount*echoTopup[759];
-
-    let remaining = needed-totalEchoes;
-    let fill = remaining>0?trySmallPacks(remaining,"buttons"):null;
-    if (fill) {
-      totalPrice+=fill.price;
-      totalEchoes+=fill.echoes;
-      totalTopup+=fill.topup;
-    }
-    if (totalEchoes<needed) {
-      bigCount+=1;
-      let extraPrice=getBigPackPrice(bigCount);
-      totalPrice+=extraPrice;
-      totalEchoes+=759;
-      totalTopup+=echoTopup[759];
-    }
-    document.getElementById("result").innerHTML=`<p>รวมทั้งหมด: ${totalEchoes} กระดุม</p><p>ราคารวม: ${totalPrice} บาท</p><p>ยอดเติมเสียงสะท้อนรวม: ${totalTopup}</p>`;
+    let options = generateOptions("buttons", needed);
+    options.sort((a,b)=>a.price-b.price);
+    let best = options[0];
+    document.getElementById("result").innerHTML = `
+      <p>สูตรที่เลือก: ${best.desc}</p>
+      <p>รวมทั้งหมด: ${best.echoes} กระดุม</p>
+      <p>ราคารวม: ${best.price} บาท</p>
+      <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup}</p>`;
   }
 
   // โหมด 2: คำนวณจากยอดเติมเสียงสะท้อน
@@ -105,27 +92,14 @@
       document.getElementById("result").innerText = "กรุณากรอกยอดเติมเสียงสะท้อนที่ถูกต้อง";
       return;
     }
-    let bigCount = Math.floor(neededTopup/echoTopup[759]);
-    let bigPrice = getBigPackPrice(bigCount);
-    let totalPrice = bigCount*bigPrice;
-    let totalEchoes = bigCount*759;
-    let totalTopup = bigCount*echoTopup[759];
-
-    let remaining = neededTopup-totalTopup;
-    let fill = remaining>0?trySmallPacks(remaining,"topup"):null;
-    if (fill) {
-      totalPrice+=fill.price;
-      totalEchoes+=fill.echoes;
-      totalTopup+=fill.topup;
-    }
-    if (totalTopup<neededTopup) {
-      bigCount+=1;
-      let extraPrice=getBigPackPrice(bigCount);
-      totalPrice+=extraPrice;
-      totalEchoes+=759;
-      totalTopup+=echoTopup[759];
-    }
-    document.getElementById("result").innerHTML=`<p>รวมทั้งหมด: ${totalEchoes} กระดุม</p><p>ราคารวม: ${totalPrice} บาท</p><p>ยอดเติมเสียงสะท้อนรวม: ${totalTopup}</p>`;
+    let options = generateOptions("topup", neededTopup);
+    options.sort((a,b)=>a.price-b.price);
+    let best = options[0];
+    document.getElementById("result").innerHTML = `
+      <p>สูตรที่เลือก: ${best.desc}</p>
+      <p>รวมทั้งหมด: ${best.echoes} กระดุม</p>
+      <p>ราคารวม: ${best.price} บาท</p>
+      <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup}</p>`;
   }
 
   // โหมด 3: คำนวณจากงบประมาณ
@@ -135,17 +109,26 @@
       document.getElementById("result").innerText = "กรุณากรอกงบประมาณที่ถูกต้อง";
       return;
     }
-    let options=[];
-    for (let c66=0;c66<=2;c66++) {
-      for (let c203=0;c203<=1;c203++) {
-        for (let c335=0;c335<=1;c335++) {
-          for (let c759=0;c759<=10;c759++) {
-            let price=c66*prices[66]+c203*prices[203]+c335*prices[335]+c759*prices[759];
-            let desc=`${c759>0?`759 x ${c759} `:""}${c335>0?`+ 335 x ${c335} `:""}${c203>0?`+ 203 x ${c203} `:""}${c66>0?`+ 66 x ${c66}`:""}`;
-            if(desc==="") continue;
-            options.push({desc:desc.trim(),price});
-          }
-        }
-      }
-    }
-    let lower=options.filter(o=>o.price<budget
+    let options = generateOptions("budget", budget);
+    let lower = options.filter(o=>o.price<budget).sort((a,b)=>budget-b.price-(budget-a.price))[0];
+    let equal = options.reduce((best,o)=>Math.abs(o.price-budget)<Math.abs((best?.price||0)-budget)?o:best,null);
+    let higher = options.filter(o=>o.price>budget).sort((a,b)=>a.price-budget-(b.price-budget))[0];
+
+    let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th></tr></thead><tbody>";
+    if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td></tr>`;
+    if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td></tr>`;
+    if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td></tr>`;
+    html += "</tbody></table>";
+    document.getElementById("result").innerHTML = html;
+  }
+
+  function calculate() {
+    let mode = document.getElementById("modeSelect").value;
+    if (mode === "buttons") calculateButtons();
+    else if (mode === "topup") calculateTopup();
+    else calculateBudget();
+  }
+</script>
+
+</body>
+</html>
