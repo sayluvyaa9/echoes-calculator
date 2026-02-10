@@ -69,12 +69,15 @@
 
             let price = c66*prices[66] + c203*prices[203] + c335*prices[335] + c759*price759;
 
+            // จำนวนสิทธิ์สุ่ม = จำนวนแพ็กทั้งหมด
+            let packs = c66 + c203 + c335 + c759;
+
             let desc = `${c759>0?`759x${c759} `:""}${c335>0?`335x${c335} `:""}${c203>0?`203x${c203} `:""}${c66>0?`66x${c66}`:""}`.trim();
             if (!desc) continue;
 
-            if (mode==="buttons" && echoes>=target) options.push({desc,echoes,topup,price});
-            if (mode==="topup" && topup>=target) options.push({desc,echoes,topup,price});
-            if (mode==="budget") options.push({desc,echoes,topup,price});
+            if (mode==="buttons" && echoes>=target) options.push({desc,echoes,topup,price,packs});
+            if (mode==="topup" && topup>=target) options.push({desc,echoes,topup,price,packs});
+            if (mode==="budget") options.push({desc,echoes,topup,price,packs});
           }
         }
       }
@@ -95,7 +98,8 @@
       <p>สูตรที่เลือก: ${best.desc}</p>
       <p>รวมทั้งหมด: ${best.echoes} กระดุม</p>
       <p>ราคารวม: ${best.price} บาท</p>
-      <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup}</p>`;
+      <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup}</p>
+      <p>จำนวนสิทธิ์สุ่มที่ได้: ${best.packs}</p>`;
   }
 
   function calculateTopup() {
@@ -111,7 +115,8 @@
       <p>สูตรที่เลือก: ${best.desc}</p>
       <p>รวมทั้งหมด: ${best.echoes} กระดุม</p>
       <p>ราคารวม: ${best.price} บาท</p>
-      <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup}</p>`;
+      <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup}</p>
+      <p>จำนวนสิทธิ์สุ่มที่ได้: ${best.packs}</p>`;
   }
 
   function calculateBudget() {
@@ -126,10 +131,10 @@
     let equal = options.reduce((best,o)=>Math.abs(o.price-budget)<Math.abs((best?.price||0)-budget)?o:best,null);
     let higher = options.filter(o=>o.price>budget).sort((a,b)=>(a.price-budget)-(b.price-budget))[0];
 
-    let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th><th>กระดุมรวม</th><th>ยอดเติมเสียงสะท้อน</th></tr></thead><tbody>";
-    if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td><td>${lower.echoes}</td><td>${lower.topup}</td></tr>`;
-    if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td><td>${equal.echoes}</td><td>${equal.topup}</td></tr>`;
-    if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td><td>${higher.echoes}</td><td>${higher.topup}</td></tr>`;
+    let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th><th>กระดุมรวม</th><th>ยอดเติมเสียงสะท้อน</th><th>สิทธิ์สุ่ม</th></tr></thead><tbody>";
+    if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td><td>${lower.echoes}</td><td>${lower.topup}</td><td>${lower.packs}</td></tr>`;
+    if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td><td>${equal.echoes}</td><td>${equal.topup}</td><td>${equal.packs}</td></tr>`;
+    if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td><td>${higher.echoes}</td><td>${higher.topup}</td><td>${higher.packs}</td></tr>`;
     html += "</tbody></table>";
     document.getElementById("result").innerHTML = html;
   }
@@ -139,8 +144,3 @@
     if (mode === "buttons") calculateButtons();
     else if (mode === "topup") calculateTopup();
     else calculateBudget();
-  }
-</script>
-
-</body>
-</html>
