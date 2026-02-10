@@ -40,7 +40,6 @@
   const echoTopup = { 66: 60, 203: 185, 335: 305, 759: 690 };
   const prices = { 66: 30, 203: 85, 335: 140, 759: 280 };
 
-  // ✅ ฟังก์ชัน generateOptions ที่แก้แล้ว
   function generateOptions(mode, target) {
     let options = [];
     let maxBig = 0;
@@ -59,7 +58,17 @@
           for (let c759=0;c759<=maxBig;c759++) {
             let echoes = c66*66 + c203*203 + c335*335 + c759*759;
             let topup = c66*echoTopup[66] + c203*echoTopup[203] + c335*echoTopup[335] + c759*echoTopup[759];
-            let price = c66*prices[66] + c203*prices[203] + c335*prices[335] + c759*prices[759];
+
+            // ส่วนลดราคาพิเศษสำหรับแพ็กใหญ่
+            let price759 = prices[759];
+            if (c759 >= 25) {
+              price759 = 275;
+            } else if (c759 >= 15) {
+              price759 = 278;
+            }
+
+            let price = c66*prices[66] + c203*prices[203] + c335*prices[335] + c759*price759;
+
             let desc = `${c759>0?`759x${c759} `:""}${c335>0?`335x${c335} `:""}${c203>0?`203x${c203} `:""}${c66>0?`66x${c66}`:""}`.trim();
             if (!desc) continue;
 
@@ -79,7 +88,7 @@
       document.getElementById("result").innerText = "กรุณากรอกจำนวนกระดุมที่ถูกต้อง";
       return;
     }
-    let options = generateOptions("buttons", needed);
+    let options = generateOptions("buttons", needed).filter(o=>o.echoes>=needed);
     options.sort((a,b)=>a.price-b.price);
     let best = options[0];
     document.getElementById("result").innerHTML = `
@@ -95,7 +104,7 @@
       document.getElementById("result").innerText = "กรุณากรอกยอดเติมเสียงสะท้อนที่ถูกต้อง";
       return;
     }
-    let options = generateOptions("topup", neededTopup);
+    let options = generateOptions("topup", neededTopup).filter(o=>o.topup>=neededTopup);
     options.sort((a,b)=>a.price-b.price);
     let best = options[0];
     document.getElementById("result").innerHTML = `
@@ -118,11 +127,10 @@
     let higher = options.filter(o=>o.price>budget).sort((a,b)=>(a.price-budget)-(b.price-budget))[0];
 
     let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th><th>กระดุมรวม</th><th>ยอดเติมเสียงสะท้อน</th></tr></thead><tbody>";
-if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td><td>${lower.echoes}</td><td>${lower.topup}</td></tr>`;
-if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td><td>${equal.echoes}</td><td>${equal.topup}</td></tr>`;
-if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td><td>${higher.echoes}</td><td>${higher.topup}</td></tr>`;
-html += "</tbody></table>";
-
+    if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td><td>${lower.echoes}</td><td>${lower.topup}</td></tr>`;
+    if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ</td><td>${equal.desc}</td><td>${equal.price} บาท</td><td>${equal.echoes}</td><td>${equal.topup}</td></tr>`;
+    if (higher) html += `<tr><td>สูงกว่าเล็กน้อย</td><td>${higher.desc}</td><td>${higher.price} บาท</td><td>${higher.echoes}</td><td>${higher.topup}</td></tr>`;
+    html += "</tbody></table>";
     document.getElementById("result").innerHTML = html;
   }
 
@@ -136,4 +144,3 @@ html += "</tbody></table>";
 
 </body>
 </html>
-
