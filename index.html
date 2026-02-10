@@ -19,7 +19,6 @@
           <option value="buttons">คำนวณจากจำนวนกระดุม</option>
           <option value="topup">คำนวณจากยอดเติมเสียงสะท้อน</option>
           <option value="budget">คำนวณจากงบประมาณ</option>
-          <option value="discount">คำนวณแบบใช้ส่วนลด</option>
         </select>
       </div>
 
@@ -27,61 +26,6 @@
         <label for="echoesInput" class="form-label">จำนวนที่ต้องการ (กระดุม / ยอดเติม / งบ)</label>
         <input type="number" id="echoesInput" class="form-control" placeholder="เช่น 833 หรือ 1759 หรือ 1000">
       </div>
-
-      <!-- ช่องเลือกส่วนลดสำหรับแต่ละแพ็ก -->
-      <div class="mb-3">
-        <label class="form-label">เลือกส่วนลดสำหรับแต่ละแพ็ก</label><br>
-        <div>66 กระดุม:
-          <select id="discount66" class="form-select">
-            <option value="none">ไม่ใช้ส่วนลด</option>
-            <option value="3">ใช้ส่วนลด 3%</option>
-            <option value="10">ใช้ส่วนลด 10%</option>
-          </select>
-        </div>
-        <div>203 กระดุม:
-          <select id="discount203" class="form-select">
-            <option value="none">ไม่ใช้ส่วนลด</option>
-            <option value="3">ใช้ส่วนลด 3%</option>
-            <option value="10">ใช้ส่วนลด 10%</option>
-          </select>
-        </div>
-        <div>335 กระดุม:
-          <select id="discount335" class="form-select">
-            <option value="none">ไม่ใช้ส่วนลด</option>
-            <option value="3">ใช้ส่วนลด 3%</option>
-            <option value="10">ใช้ส่วนลด 10%</option>
-          </select>
-        </div>
-        <div>759 กระดุม:
-          <select id="discount759" class="form-select">
-            <option value="none">ไม่ใช้ส่วนลด</option>
-            <option value="3">ใช้ส่วนลด 3%</option>
-            <option value="10">ใช้ส่วนลด 10%</option>
-          </select>
-        </div>
-        <div>2227 กระดุม:
-          <select id="discount2227" class="form-select">
-            <option value="none">ไม่ใช้ส่วนลด</option>
-            <option value="3">ใช้ส่วนลด 3%</option>
-            <option value="10">ใช้ส่วนลด 10%</option>
-          </select>
-        </div>
-        <div>3663 กระดุม:
-          <select id="discount3663" class="form-select">
-            <option value="none">ไม่ใช้ส่วนลด</option>
-            <option value="3">ใช้ส่วนลด 3%</option>
-            <option value="10">ใช้ส่วนลด 10%</option>
-          </select>
-        </div>
-        <div>7249 กระดุม:
-          <select id="discount7249" class="form-select">
-            <option value="none">ไม่ใช้ส่วนลด</option>
-            <option value="3">ใช้ส่วนลด 3%</option>
-            <option value="10">ใช้ส่วนลด 10%</option>
-          </select>
-        </div>
-      </div>
-
       <button class="btn btn-primary w-100" onclick="calculate()">คำนวณ</button>
 
       <div class="mt-4">
@@ -93,53 +37,8 @@
 </div>
 
 <script>
-  const echoTopup = { 66: 60, 203: 185, 335: 305, 759: 690, 2227: 2000, 3663: 3300, 7249: 6600 };
-  const prices = { 66: 30, 203: 85, 335: 140, 759: 280, 2227: 820, 3663: 1360, 7249: 2620 };
-
-  const discountTable = {
-    66: {p3:29, p10:27},
-    203: {p3:82, p10:77},
-    335: {p3:135, p10:125},
-    759: {p3:272, p10:252},
-    2227: {p3:820, p10:760},
-    3663: {p3:1360, p10:1260},
-    7249: {p3:2620, p10:2430}
-  };
-
-  // ฟังก์ชันส่วนลด
-  function calculateDiscount() {
-    let packs = [66,203,335,759,2227,3663,7249];
-    let totalPrice = 0, totalEchoes = 0, totalTopup = 0, totalPacks = 0;
-    let rows = "";
-
-    packs.forEach(pack=>{
-      let choice = document.getElementById("discount"+pack)?.value;
-      if (!choice) return;
-
-      let basePrice = prices[pack];
-      let finalPrice = basePrice;
-
-      if (choice === "3") finalPrice = discountTable[pack].p3;
-      else if (choice === "10") finalPrice = discountTable[pack].p10;
-
-      if (choice !== "none") {
-        totalPrice += finalPrice;
-        totalEchoes += pack;
-        totalTopup += echoTopup[pack] || 0;
-        totalPacks += 1;
-        rows += `<tr><td>${pack}</td><td>${basePrice}</td><td>${finalPrice}</td></tr>`;
-      }
-    });
-
-    let html = "<table class='table table-bordered'><thead><tr><th>แพ็ก</th><th>ราคาปกติ</th><th>ราคาหลังส่วนลด</th></tr></thead><tbody>";
-    html += rows + "</tbody></table>";
-    html += `<p>รวมราคา: ${totalPrice} บาท</p>`;
-    html += `<p>กระดุมรวม: ${totalEchoes}</p>`;
-    html += `<p>ยอดเติมเสียงสะท้อนรวม: ${totalTopup}</p>`;
-    html += `<p>จำนวนสิทธิ์สุ่มที่ได้: ${totalPacks}</p>`;
-    document.getElementById("result").innerHTML = html;
-  }
-
+  const echoTopup = { 66: 60, 203: 185, 335: 305, 759: 690 };
+  const prices = { 66: 30, 203: 85, 335: 140, 759: 280 };
 
   function generateOptions(mode, target) {
     let options = [];
@@ -235,28 +134,12 @@
     document.getElementById("result").innerHTML = html;
   }
 
- function calculate() {
-  let mode = document.getElementById("modeSelect").value;
-  let today = new Date();
-  let deadline = new Date("2026-02-23T23:59:59"); // วันหมดเขตโปรโมชั่น
-
-  if (mode === "buttons") {
-    calculateButtons();
-  } else if (mode === "topup") {
-    calculateTopup();
-  } else if (mode === "budget") {
-    calculateBudget();
-  } else if (mode === "discount") {
-    if (today <= deadline) {
-      calculateDiscount();
-    } else {
-      document.getElementById("result").innerHTML =
-        "<p>สิทธิ์ส่วนลดหมดเขตแล้ว ไม่สามารถใช้งานได้</p>";
-    }
+  function calculate() {
+    let mode = document.getElementById("modeSelect").value;
+    if (mode === "buttons") calculateButtons();
+    else if (mode === "topup") calculateTopup();
+    else calculateBudget();
   }
-}
-
-
 </script>
 
 </body>
