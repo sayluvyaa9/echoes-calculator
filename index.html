@@ -11,7 +11,7 @@
 <div class="container py-5">
   <div class="card shadow">
     <div class="card-body">
-      <h2 class="card-title text-center mb-4">ตัวช่วยคำนวณแพ็กเกจ Echoes จากร้าน sayluvyaa </h2>
+      <h2 class="card-title text-center mb-4">เครื่องคำนวณแพ็กเกจ Echoes</h2>
 
       <div class="mb-3">
         <label for="modeSelect" class="form-label">เลือกโหมดคำนวณ</label>
@@ -53,17 +53,27 @@
       document.getElementById("result").innerText = "กรุณากรอกจำนวนกระดุมที่ถูกต้อง";
       return;
     }
-    // ตัวอย่าง: ใช้แพ็กใหญ่เป็นหลัก + เติมแพ็กเล็กตามกฎ
+    // ใช้สูตรเดิม: 759 เป็นหลัก + เติมแพ็กเล็กตามกฎ
     let bigCount = Math.floor(needed / 759);
     let bigPrice = getBigPackPrice(bigCount);
     let totalPrice = bigCount * bigPrice;
     let totalEchoes = bigCount * 759;
     let totalTopup = bigCount * echoTopup[759];
 
-    let html = `<p>รวมทั้งหมด: ${totalEchoes} กระดุม</p>
-                <p>ราคารวม: ${totalPrice} บาท</p>
-                <p>ยอดเติมเสียงสะท้อนรวม: ${totalTopup}</p>`;
-    document.getElementById("result").innerHTML = html;
+    // ถ้ายังไม่ถึง → ปัดขึ้นไปใช้แพ็กใหญ่
+    if (totalEchoes < needed) {
+      bigCount += 1;
+      let extraPrice = getBigPackPrice(bigCount);
+      totalPrice += extraPrice;
+      totalEchoes += 759;
+      totalTopup += echoTopup[759];
+    }
+
+    document.getElementById("result").innerHTML = `
+      <p><strong>รวมทั้งหมด:</strong> ${totalEchoes} กระดุม</p>
+      <p><strong>ราคารวม:</strong> ${totalPrice} บาท</p>
+      <p><strong>ยอดเติมเสียงสะท้อนรวม:</strong> ${totalTopup}</p>
+    `;
   }
 
   // โหมด 2: คำนวณจากยอดเติมเสียงสะท้อน
@@ -79,10 +89,20 @@
     let totalEchoes = bigCount * 759;
     let totalTopup = bigCount * echoTopup[759];
 
-    let html = `<p>รวมทั้งหมด: ${totalEchoes} กระดุม</p>
-                <p>ราคารวม: ${totalPrice} บาท</p>
-                <p>ยอดเติมเสียงสะท้อนรวม: ${totalTopup}</p>`;
-    document.getElementById("result").innerHTML = html;
+    // ถ้ายังไม่ถึง → ปัดขึ้นไปใช้แพ็กใหญ่
+    if (totalTopup < neededTopup) {
+      bigCount += 1;
+      let extraPrice = getBigPackPrice(bigCount);
+      totalPrice += extraPrice;
+      totalEchoes += 759;
+      totalTopup += echoTopup[759];
+    }
+
+    document.getElementById("result").innerHTML = `
+      <p><strong>รวมทั้งหมด:</strong> ${totalEchoes} กระดุม</p>
+      <p><strong>ราคารวม:</strong> ${totalPrice} บาท</p>
+      <p><strong>ยอดเติมเสียงสะท้อนรวม:</strong> ${totalTopup}</p>
+    `;
   }
 
   // โหมด 3: คำนวณจากงบประมาณ
@@ -94,6 +114,10 @@
     }
 
     let options = [];
+    // ลองทั้งแพ็กใหญ่และแพ็กเล็ก
+    [66,203,335,759].forEach(pack=>{
+      options.push({desc:`${pack} x 1`, price:prices[pack]});
+    });
     for (let count = 1; count <= 20; count++) {
       let price = getBigPackPrice(count) * count;
       options.push({desc:`759 x ${count}`, price});
