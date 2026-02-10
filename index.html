@@ -46,6 +46,28 @@
     return 280;
   }
 
+  // ฟังก์ชันลองทุกชุดแพ็กเล็กตามกฎ
+  function trySmallPacks(target, mode="buttons") {
+    let options = [];
+    for (let c66=0;c66<=2;c66++) {
+      for (let c203=0;c203<=1;c203++) {
+        for (let c335=0;c335<=1;c335++) {
+          let echoes = c66*66 + c203*203 + c335*335;
+          let topup = c66*echoTopup[66] + c203*echoTopup[203] + c335*echoTopup[335];
+          let price = c66*prices[66] + c203*prices[203] + c335*prices[335];
+          if (mode==="buttons" && echoes>=target) {
+            options.push({echoes,topup,price,packs:{c66,c203,c335}});
+          }
+          if (mode==="topup" && topup>=target) {
+            options.push({echoes,topup,price,packs:{c66,c203,c335}});
+          }
+        }
+      }
+    }
+    options.sort((a,b)=>a.price-b.price);
+    return options[0]||null;
+  }
+
   // โหมด 1: คำนวณจากจำนวนกระดุม
   function calculateButtons() {
     let needed = parseInt(document.getElementById("echoesInput").value);
@@ -53,27 +75,27 @@
       document.getElementById("result").innerText = "กรุณากรอกจำนวนกระดุมที่ถูกต้อง";
       return;
     }
-    // ใช้สูตรเดิม: 759 เป็นหลัก + เติมแพ็กเล็กตามกฎ
-    let bigCount = Math.floor(needed / 759);
+    let bigCount = Math.floor(needed/759);
     let bigPrice = getBigPackPrice(bigCount);
-    let totalPrice = bigCount * bigPrice;
-    let totalEchoes = bigCount * 759;
-    let totalTopup = bigCount * echoTopup[759];
+    let totalPrice = bigCount*bigPrice;
+    let totalEchoes = bigCount*759;
+    let totalTopup = bigCount*echoTopup[759];
 
-    // ถ้ายังไม่ถึง → ปัดขึ้นไปใช้แพ็กใหญ่
-    if (totalEchoes < needed) {
-      bigCount += 1;
-      let extraPrice = getBigPackPrice(bigCount);
-      totalPrice += extraPrice;
-      totalEchoes += 759;
-      totalTopup += echoTopup[759];
+    let remaining = needed-totalEchoes;
+    let fill = remaining>0?trySmallPacks(remaining,"buttons"):null;
+    if (fill) {
+      totalPrice+=fill.price;
+      totalEchoes+=fill.echoes;
+      totalTopup+=fill.topup;
     }
-
-    document.getElementById("result").innerHTML = `
-      <p><strong>รวมทั้งหมด:</strong> ${totalEchoes} กระดุม</p>
-      <p><strong>ราคารวม:</strong> ${totalPrice} บาท</p>
-      <p><strong>ยอดเติมเสียงสะท้อนรวม:</strong> ${totalTopup}</p>
-    `;
+    if (totalEchoes<needed) {
+      bigCount+=1;
+      let extraPrice=getBigPackPrice(bigCount);
+      totalPrice+=extraPrice;
+      totalEchoes+=759;
+      totalTopup+=echoTopup[759];
+    }
+    document.getElementById("result").innerHTML=`<p>รวมทั้งหมด: ${totalEchoes} กระดุม</p><p>ราคารวม: ${totalPrice} บาท</p><p>ยอดเติมเสียงสะท้อนรวม: ${totalTopup}</p>`;
   }
 
   // โหมด 2: คำนวณจากยอดเติมเสียงสะท้อน
@@ -83,26 +105,27 @@
       document.getElementById("result").innerText = "กรุณากรอกยอดเติมเสียงสะท้อนที่ถูกต้อง";
       return;
     }
-    let bigCount = Math.floor(neededTopup / echoTopup[759]);
+    let bigCount = Math.floor(neededTopup/echoTopup[759]);
     let bigPrice = getBigPackPrice(bigCount);
-    let totalPrice = bigCount * bigPrice;
-    let totalEchoes = bigCount * 759;
-    let totalTopup = bigCount * echoTopup[759];
+    let totalPrice = bigCount*bigPrice;
+    let totalEchoes = bigCount*759;
+    let totalTopup = bigCount*echoTopup[759];
 
-    // ถ้ายังไม่ถึง → ปัดขึ้นไปใช้แพ็กใหญ่
-    if (totalTopup < neededTopup) {
-      bigCount += 1;
-      let extraPrice = getBigPackPrice(bigCount);
-      totalPrice += extraPrice;
-      totalEchoes += 759;
-      totalTopup += echoTopup[759];
+    let remaining = neededTopup-totalTopup;
+    let fill = remaining>0?trySmallPacks(remaining,"topup"):null;
+    if (fill) {
+      totalPrice+=fill.price;
+      totalEchoes+=fill.echoes;
+      totalTopup+=fill.topup;
     }
-
-    document.getElementById("result").innerHTML = `
-      <p><strong>รวมทั้งหมด:</strong> ${totalEchoes} กระดุม</p>
-      <p><strong>ราคารวม:</strong> ${totalPrice} บาท</p>
-      <p><strong>ยอดเติมเสียงสะท้อนรวม:</strong> ${totalTopup}</p>
-    `;
+    if (totalTopup<neededTopup) {
+      bigCount+=1;
+      let extraPrice=getBigPackPrice(bigCount);
+      totalPrice+=extraPrice;
+      totalEchoes+=759;
+      totalTopup+=echoTopup[759];
+    }
+    document.getElementById("result").innerHTML=`<p>รวมทั้งหมด: ${totalEchoes} กระดุม</p><p>ราคารวม: ${totalPrice} บาท</p><p>ยอดเติมเสียงสะท้อนรวม: ${totalTopup}</p>`;
   }
 
   // โหมด 3: คำนวณจากงบประมาณ
@@ -112,42 +135,17 @@
       document.getElementById("result").innerText = "กรุณากรอกงบประมาณที่ถูกต้อง";
       return;
     }
-
-    let options = [];
-    // ลองทั้งแพ็กใหญ่และแพ็กเล็ก
-    [66,203,335,759].forEach(pack=>{
-      options.push({desc:`${pack} x 1`, price:prices[pack]});
-    });
-    for (let count = 1; count <= 20; count++) {
-      let price = getBigPackPrice(count) * count;
-      options.push({desc:`759 x ${count}`, price});
-      options.push({desc:`759 x ${count} + 335`, price: price + prices[335]});
+    let options=[];
+    for (let c66=0;c66<=2;c66++) {
+      for (let c203=0;c203<=1;c203++) {
+        for (let c335=0;c335<=1;c335++) {
+          for (let c759=0;c759<=10;c759++) {
+            let price=c66*prices[66]+c203*prices[203]+c335*prices[335]+c759*prices[759];
+            let desc=`${c759>0?`759 x ${c759} `:""}${c335>0?`+ 335 x ${c335} `:""}${c203>0?`+ 203 x ${c203} `:""}${c66>0?`+ 66 x ${c66}`:""}`;
+            if(desc==="") continue;
+            options.push({desc:desc.trim(),price});
+          }
+        }
+      }
     }
-
-    let lower = options.filter(o => o.price < budget).sort((a,b)=>budget-b.price-budget+a.price)[0];
-    let equal = options.reduce((best,o)=>Math.abs(o.price-budget)<Math.abs((best?.price||0)-budget)?o:best,null);
-    let higher = options.filter(o => o.price > budget).sort((a,b)=>a.price-budget-(b.price-budget))[0];
-
-    let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>ราคา</th></tr></thead><tbody>";
-    if (lower) html += `<tr><td>ต่ำกว่า: ${lower.desc}</td><td>${lower.price} บาท</td></tr>`;
-    if (equal) html += `<tr><td>ใกล้เคียง/เท่ากับ: ${equal.desc}</td><td>${equal.price} บาท</td></tr>`;
-    if (higher) html += `<tr><td>สูงกว่าเล็กน้อย: ${higher.desc}</td><td>${higher.price} บาท</td></tr>`;
-    html += "</tbody></table>";
-
-    document.getElementById("result").innerHTML = html;
-  }
-
-  function calculate() {
-    let mode = document.getElementById("modeSelect").value;
-    if (mode === "buttons") {
-      calculateButtons();
-    } else if (mode === "topup") {
-      calculateTopup();
-    } else {
-      calculateBudget();
-    }
-  }
-</script>
-
-</body>
-</html>
+    let lower=options.filter(o=>o.price<budget
