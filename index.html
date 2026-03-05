@@ -11,7 +11,7 @@
 <div class="container py-5">
   <div class="card shadow">
     <div class="card-body">
-      <h2 class="card-title text-center mb-4">ตัวช่วยคำนวณแพ็กเกจ Echoes จากร้าน sayluvyaa</h2>
+      <h2 class="card-title text-center mb-4">ตัวช่วยคำนวณ Echoes จาก sayluvyaa</h2>
 
       <div class="mb-3">
         <label for="modeSelect" class="form-label">เลือกโหมดคำนวณ</label>
@@ -20,6 +20,7 @@
           <option value="topup">คำนวณจากยอดเติมเสียงสะท้อน</option>
           <option value="budget">คำนวณจากงบประมาณ</option>
           <option value="discount">คำนวณแบบใช้ส่วนลด</option>
+          <option value="gacha">คำนวณลูกกาชา</option>
 
         </select>
       </div>
@@ -27,6 +28,20 @@
       <div class="mb-3" id="generalInput">
   <label for="echoesInput" class="form-label">จำนวนที่ต้องการ (กระดุม / ยอดเติม / งบ)</label>
   <input type="number" id="echoesInput" class="form-control" placeholder="เช่น 833 หรือ 1759 หรือ 1000">
+</div>
+      <!-- ===== โหมดกาชา ===== -->
+<div id="gachaInput" style="display:none;">
+
+  <div class="mb-3">
+    <label class="form-label">จำนวนแพ็กพิเศษ (576 Echoes ได้ 10 ลูก ใส่จำนวนแพ็ก เช่น 1) </label>
+    <input type="number" id="specialPack" class="form-control">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">จำนวนลูกปกติที่ต้องการ (ลูกละ 96 Echoes ใส่จำนวน เช่น 10)</label>
+    <input type="number" id="normalBalls" class="form-control">
+  </div>
+
 </div>
 
 <!-- ตารางเลือกแพ็กและส่วนลด -->
@@ -72,7 +87,7 @@
     }
 
     for (let c66=0;c66<=2;c66++) {
-      for (let c203=0;c203<=1;c203++) {
+      for (let c203=0;c203<=2;c203++) {
         for (let c335=0;c335<=1;c335++) {
           for (let c759=0;c759<=maxBig;c759++) {
             let echoes = c66*66 + c203*203 + c335*335 + c759*759;
@@ -153,12 +168,56 @@
     document.getElementById("result").innerHTML = html;
   }
 
+ function calculateGacha() {
+
+  let specialPack = parseInt(document.getElementById("specialPack").value) || 0;
+  let normalBalls = parseInt(document.getElementById("normalBalls").value) || 0;
+
+  // Echoes ที่ต้องใช้จริง
+  let echoesNeeded = (specialPack * 576) + (normalBalls * 96);
+
+  if (echoesNeeded <= 0) {
+    document.getElementById("result").innerText = "กรุณากรอกจำนวนที่ต้องการ";
+    return;
+  }
+
+  // ใช้ระบบเดียวกับโหมดกระดุม
+  let options = generateOptions("buttons", echoesNeeded)
+                  .filter(o => o.echoes >= echoesNeeded);
+
+  options.sort((a,b)=>a.price-b.price);
+  let best = options[0];
+
+  // จัดรูปแบบแพ็กให้อ่านง่าย (มีเว้นวรรค)
+  let formattedDesc = best.desc
+      .replace(/x/g," x ")
+      .replace(/\s+/g," ")
+      .trim();
+
+  let totalBalls = (specialPack * 10) + normalBalls;
+
+  document.getElementById("result").innerHTML = `
+    <h5>แพ็กที่ใช้:</h5>
+    <p><strong>${formattedDesc}</strong></p>
+
+    <p>รวมทั้งหมด: ${best.echoes.toLocaleString()} กระดุม</p>
+    <p>ราคารวม: ${best.price.toLocaleString()} บาท</p>
+    <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup.toLocaleString()}</p>
+
+    <hr>
+
+    <p>จำนวนลูกกาชารวม: <strong>${totalBalls}</strong> ลูก</p>
+  `;
+}
+  
   function calculate() {
   let mode = document.getElementById("modeSelect").value;
+
   if (mode === "buttons") calculateButtons();
   else if (mode === "topup") calculateTopup();
   else if (mode === "budget") calculateBudget();
   else if (mode === "discount") calculateDiscount();
+  else if (mode === "gacha") calculateGacha();
 }
 
 // ราคาพรีออเดอร์ (ใช้เฉพาะโหมดส่วนลด)
@@ -274,12 +333,18 @@ function calculateDiscount() {
   document.getElementById("result").innerHTML = html;
 }
   document.getElementById("modeSelect").addEventListener("change", function() {
-  console.log("modeSelect value:", this.value); // ตรวจสอบค่า
+
+  document.getElementById("discountTable").style.display = "none";
+  document.getElementById("generalInput").style.display = "none";
+  document.getElementById("gachaInput").style.display = "none";
+
   if (this.value === "discount") {
     document.getElementById("discountTable").style.display = "block";
-    document.getElementById("generalInput").style.display = "none";
-  } else {
-    document.getElementById("discountTable").style.display = "none";
+  } 
+  else if (this.value === "gacha") {
+    document.getElementById("gachaInput").style.display = "block";
+  } 
+  else {
     document.getElementById("generalInput").style.display = "block";
   }
 });
@@ -290,11 +355,6 @@ function calculateDiscount() {
 
 </body>
 </html>
-
-
-
-
-
 
 
 
