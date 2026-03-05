@@ -197,9 +197,7 @@
   let totalBalls = (specialPack * 10) + normalBalls;
 
   document.getElementById("result").innerHTML = `
-    <h5>แพ็กที่ใช้:</h5>
-    <p><strong>${formattedDesc}</strong></p>
-
+    <p>สูตรที่เลือก: ${formattedDesc}</p>
     <p>รวมทั้งหมด: ${best.echoes.toLocaleString()} กระดุม</p>
     <p>ราคารวม: ${best.price.toLocaleString()} บาท</p>
     <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup.toLocaleString()}</p>
@@ -355,6 +353,7 @@ function calculateDiscount() {
 
 </body>
 </html>
+
 
 
 
