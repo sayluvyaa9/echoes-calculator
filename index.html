@@ -1,18 +1,215 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+
+@font-face {
+  font-family: "Lookpeach";
+  src: url("Lookpeach-Th.ttf");
+}
+
+body{
+  background: linear-gradient(180deg,#ffe6f4,#fff7fb);
+  font-family:"Lookpeach","Kanit",sans-serif;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+</style>
+  
   <meta charset="UTF-8">
   <title>เครื่องคำนวณ Echoes</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+
+body{
+  background: linear-gradient(180deg,#ffe6f0,#fff5fa);
+  font-family: "Prompt", sans-serif;
+}
+
+/* กล่องหลัก */
+.card{
+  border-radius:20px;
+  border:none;
+}
+
+/* หัวข้อ */
+.card-title{
+  color:#ff4fa3;
+  font-weight:600;
+}
+
+/* input */
+.form-control, .form-select{
+  border-radius:12px;
+  border:1px solid #ffc2dd;
+}
+
+/* focus */
+.form-control:focus, .form-select:focus{
+  border-color:#ff8fc7;
+  box-shadow:0 0 0 0.15rem rgba(255,140,200,.25);
+}
+
+/* ปุ่มหลัก */
+.btn-primary{
+  background:#ff7eb9;
+  border:none;
+  border-radius:14px;
+  font-weight:500;
+}
+
+.btn-primary:hover{
+  background:#ff5fa8;
+}
+
+/* ปุ่มเพิ่ม */
+.btn-secondary{
+  background:#ffd3e6;
+  border:none;
+  color:#a63c6c;
+  border-radius:12px;
+}
+
+.btn-secondary:hover{
+  background:#ffc2dd;
+}
+
+/* กล่องผลลัพธ์ */
+#result{
+  border-radius:14px;
+  background:#fff0f6;
+  border:1px solid #ffd1e8;
+}
+
+/* ตาราง */
+.table{
+  background:white;
+  border-radius:10px;
+  overflow:hidden;
+}
+
+.table thead{
+  background:#ffd6eb;
+}
+
+/* เส้น hr */
+hr{
+  border-top:1px dashed #ffb3da;
+}
+
+</style>
+  
 </head>
 <body class="bg-light">
 
+  <div class="banner">
+  <img src="banner.png">
+</div>
+  
+  .banner{
+  width:100%;
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.banner img{
+  width:100%;
+  max-height:220px;
+  object-fit:cover;
+  border-radius:20px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.15);
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+  100%{transform:translateY(0)}
+}
+
+  .card{
+  border-radius:24px;
+  border:none;
+  box-shadow:0 10px 30px rgba(255,120,180,0.25);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-4px);
+}
+
+.card-title{
+  color:#ff4fa3;
+  font-size:28px;
+  text-align:center;
+}
+
+  .btn-primary{
+  background:linear-gradient(45deg,#ff7eb9,#ffb3da);
+  border:none;
+  border-radius:16px;
+  font-size:18px;
+  transition:0.2s;
+}
+
+.btn-primary:hover{
+  transform:scale(1.05);
+}
+
+.btn-secondary{
+  background:#ffd3e6;
+  border:none;
+  border-radius:14px;
+}
+
+  #result{
+  background:#fff0f7;
+  border:1px solid #ffd6eb;
+  border-radius:18px;
+  padding:15px;
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop{
+  0%{
+    transform:scale(0.9);
+    opacity:0;
+  }
+  100%{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+  .sparkle{
+  position:absolute;
+  font-size:20px;
+  animation:spark 2s infinite;
+}
+
+@keyframes spark{
+  0%{opacity:0;transform:translateY(0)}
+  50%{opacity:1}
+  100%{opacity:0;transform:translateY(-10px)}
+}
+  
 <div class="container py-5">
   <div class="card shadow">
     <div class="card-body">
-      <h2 class="card-title text-center mb-4">ตัวช่วยคำนวณ Echoes จาก sayluvyaa</h2>
-
+      <h2 class="card-title">
+🎀 ตัวช่วยคำนวณ Echoes 🎀  
+<br>
+💗 by sayluvyaa 💗
+</h2>
       <div class="mb-3">
         <label for="modeSelect" class="form-label">เลือกโหมดคำนวณ</label>
         <select id="modeSelect" class="form-select">
@@ -56,14 +253,14 @@
     </thead>
     <tbody id="discountRows"></tbody>
   </table>
-  <button class="btn btn-secondary" onclick="addDiscountRow()">เพิ่มแถว</button>
+  <button class="btn btn-secondary mt-2" onclick="addDiscountRow()">➕ เพิ่มแถว</button>
 </div>
 
 <button class="btn btn-primary w-100" onclick="calculate()">คำนวณ</button>
 
 
       <div class="mt-4">
-        <h5>ผลลัพธ์:</h5>
+       <h5>✨ ผลลัพธ์การคำนวณ</h5>
         <div id="result" class="bg-white p-3 border rounded"></div>
       </div>
     </div>
@@ -353,6 +550,7 @@ function calculateDiscount() {
 
 </body>
 </html>
+
 
 
 
