@@ -220,10 +220,12 @@ hr{
 }
 
 .dark-mode #result{
-  background:#4a3445;
+  background:linear-gradient(180deg,#3a2a35,#4a3445);
   border:1px solid #ff9bd0;
+  color:#ffe3f3;
+  box-shadow:0 6px 20px rgba(0,0,0,0.4);
 }
-
+    
 .dark-mode .table{
   background:#4a3445;
   color:#ffd9ec;
@@ -265,6 +267,31 @@ z-index:999;
 
 .dark-toggle:hover{
 transform:scale(1.1);
+}
+
+/* ตารางในโหมดกลางคืน */
+.dark-mode .table{
+  background:#4a3445;
+  color:#ffd9ec;
+}
+
+/* หัวตาราง */
+.dark-mode .table thead{
+  background:#ff9bd0;
+  color:#3a2b37;
+}
+
+/* ช่องตาราง */
+.dark-mode .table td,
+.dark-mode .table th{
+  background:#4a3445;
+  color:#ffd9ec;
+  border-color:#6b4a63;
+}
+
+/* ลบพื้นหลังขาว bootstrap */
+.dark-mode .table-striped>tbody>tr:nth-of-type(odd)>*{
+  background:#4a3445;
 }
     
 </style>
@@ -332,7 +359,7 @@ transform:scale(1.1);
     </thead>
     <tbody id="discountRows"></tbody>
   </table>
-  <button class="btn btn-secondary mt-2" onclick="addDiscountRow()">➕ เพิ่มแถว</button>
+  <button class="btn btn-secondary mt-1 mb-3" onclick="addDiscountRow()">➕ เพิ่มแถว</button>
 </div>
 
 <button class="btn btn-primary w-100" onclick="calculate()">คำนวณ</button>
@@ -665,6 +692,11 @@ window.onload = function(){
   
 </body>
 </html>
+
+
+
+
+
 
 
 
