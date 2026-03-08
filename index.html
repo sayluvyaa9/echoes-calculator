@@ -487,13 +487,25 @@ padding:10px 15px;
 border:1px solid #ffc2dd;
 }
   
+#resultBox{
+max-height:0;
+overflow:hidden;
+opacity:0;
+transform:translateY(-20px);
+transition:all 0.5s ease;
+}
+
+#resultBox.show{
+max-height:500px;
+opacity:1;
+transform:translateY(0);
+}
     
 </style>
   
 </head>
 <body class="bg-light">
 
-<button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
 
 <div class="banner">
   <img src="banner.png">
@@ -558,10 +570,16 @@ border:1px solid #ffc2dd;
 
 <button class="btn btn-primary w-100" onclick="calculate()">คำนวณ</button>
 
-      <div class="mt-4">
+   <div class="mt-4">
+
+<div id="resultBox">
+
   <h5>✨ ผลลัพธ์การคำนวณ</h5>
 
   <div id="result" class="bg-white p-3 border rounded"></div>
+
+</div>
+</div>
 
   <div class="container mt-4">
 
@@ -740,8 +758,11 @@ onkeyup="searchSkin()">
   `;
 }
   
-  function calculate() {
-  let mode = document.getElementById("modeSelect").value;
+function calculate() {
+
+document.getElementById("resultBox").classList.add("show");
+
+let mode = document.getElementById("modeSelect").value;
 
   if (mode === "buttons") calculateButtons();
   else if (mode === "topup") calculateTopup();
@@ -1119,6 +1140,8 @@ btn.classList.remove("show");
 }
 });
 </script>
+
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
   
 <button class="top-btn" onclick="scrollToTop()">⬆️</button>
 
@@ -1137,6 +1160,7 @@ target="_blank">
   
 </body>
 </html>
+
 
 
 
