@@ -385,6 +385,16 @@ transform:scale(1.08);
 background:#ff5fa8;
 color:white;
 }
+   .price-note{
+font-size:12px;
+color:#a63c6c;
+margin-top:8px;
+text-align:center;
+}
+
+.dark-mode .price-note{
+color:#ffb6d9;
+}
     
 </style>
   
@@ -845,10 +855,12 @@ ${labels.map(l=>`<span class="badge bg-danger">${l}</span>`).join(" ")}
 
 <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup.toLocaleString()}</p>
 
+<p class="price-note">
+*ราคาคำนวณเป็นเพียงราคาคาดการณ์ ในอนาคตอาจมีการเปลี่ยนแปลง*
+</p>
+
 </div>
-
 `;
-
 }
 
   function changeQty(btn,delta){
@@ -920,9 +932,16 @@ data-label="${skin.name}">
 
 {name:"Skin S", echo:2888, img:"BlankSTierCard.png"},
 {name:"Skin S ลด 40%", echo:1733, img:"BlankSTierCard.png"},
+    
 {name:"Skin A", echo:1388, img:"BlankATierCard.png"},
 {name:"Skin A ลด 40%", echo:833, img:"BlankATierCard.png"}
-
+    
+{name:"Accessory S", echo:1888, img:"BlankSTierAccessoryCard.png"},
+{name:"Accessory A", echo:1068, img:"BlankATierAccessoryCard.png"},
+  
+{name:"Pet A", echo:888, img:"BlankATierPetCage.png"},
+{name:"Pet A", echo:788, img:"BlankATierPetCage.png"},
+{name:"Pet A", echo:718, img:"BlankATierPetCage.png"},
 ];
 
   window.onload = function(){
@@ -947,6 +966,7 @@ loadSkins();
   
 </body>
 </html>
+
 
 
 
