@@ -354,42 +354,32 @@ object-fit:contain;
   color:#ff9bd0;
 }
     
-  .floating-contact{
+    .floating-menu{
 position:fixed;
+right:20px;
 bottom:20px;
-right:20px;
-background:#ff6fb5;
+display:flex;
+flex-direction:column;
+gap:10px;
+z-index:999;
+}
+
+.floating-menu a,
+.floating-menu button{
+background:linear-gradient(45deg,#ff6fb5,#ff9bd0);
 color:white;
-padding:8px 16px;
+border:none;
 border-radius:40px;
+padding:10px 16px;
 font-size:14px;
 text-decoration:none;
 box-shadow:0 6px 15px rgba(0,0,0,0.25);
-z-index:999;
-animation:floatBtn 2.5s ease-in-out infinite;
-}
-    
-.floating-contact:hover{
-background:#218838;
-color:white;
+cursor:pointer;
+transition:0.2s;
 }
 
-    .floating-skinwish{
-position:fixed;
-bottom:65px;
-right:20px;
-background:#ff9bd0;
-color:white;
-padding:8px 16px;
-border-radius:40px;
-font-size:14px;
-text-decoration:none;
-box-shadow:0 6px 15px rgba(0,0,0,0.25);
-z-index:999;
-animation:floatBtn 2.5s ease-in-out infinite;
-}
-
-.floating-skinwish:hover{
+.floating-menu a:hover,
+.floating-menu button:hover{
 transform:scale(1.08);
 background:#ff5fa8;
 color:white;
@@ -453,32 +443,6 @@ font-size:14px;
 border-radius:20px;
 padding:10px 15px;
 border:1px solid #ffc2dd;
-}
-
-    #scrollTopBtn{
-position:fixed;
-bottom:20px;
-right:20px;
-z-index:999;
-
-background:#ff6fa5;
-color:white;
-border:none;
-border-radius:50%;
-width:50px;
-height:50px;
-
-font-size:22px;
-cursor:pointer;
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
-
-display:none;
-transition:0.3s;
-}
-
-#scrollTopBtn:hover{
-background:#ff3f87;
-transform:scale(1.1);
 }
     
 </style>
@@ -1095,42 +1059,34 @@ card.style.display = "none";
 
 }
 
-  window.onscroll = function(){
-
-let btn = document.getElementById("scrollTopBtn");
-
-if(document.documentElement.scrollTop > 200){
-btn.style.display = "block";
-}else{
-btn.style.display = "none";
-}
-
-};
-
 function scrollToTop(){
 window.scrollTo({
 top:0,
 behavior:"smooth"
 });
 }
+}
   
 </script>
 
-  <a href="#" onclick="calculateSkinWish();scrollToSkinResult();return false;"
-class="floating-skinwish">
+  <div class="floating-menu">
+
+<button onclick="scrollToTop()">⬆️</button>
+
+<a href="#" onclick="calculateSkinWish();scrollToSkinResult();return false;">
 ✨ คำนวณ Skin Wish
 </a>
 
-  <a href="https://www.facebook.com/share/1CEyAyv53R/?mibextid=wwXIfr"
-   target="_blank"
-   class="floating-contact">
-   💬 ติดต่อสั่งเติมกับร้าน
+<a href="https://www.facebook.com/share/1CEyAyv53R/?mibextid=wwXIfr"
+target="_blank">
+💬 ติดต่อสั่งเติมกับร้าน
 </a>
 
-  <button id="scrollTopBtn" onclick="scrollToTop()">⬆️</button>
+</div>
   
 </body>
 </html>
+
 
 
 
