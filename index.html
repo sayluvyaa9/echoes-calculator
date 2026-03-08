@@ -448,6 +448,12 @@ font-size:15px;
 color:#777;
 font-size:14px;
 }
+
+#skinSearch{
+border-radius:20px;
+padding:10px 15px;
+border:1px solid #ffc2dd;
+}
     
 </style>
   
@@ -527,10 +533,22 @@ font-size:14px;
   <div class="container mt-4">
 
 <h4 class="text-center">🛍 Skin Gallery</h4>
-<p class="text-center skin-desc">เลือกสกินที่ต้องการ ระบบจะรวม Echoes ให้แล้วคำนวณสูตรเติมที่คุ้มที่สุด</p>
+<p class="text-center skin-desc">
+เลือกสกินที่ต้องการ ระบบจะรวม Echoes ให้แล้วคำนวณสูตรเติมที่คุ้มที่สุด
+</p>
+
+<!-- 🔍 ช่องค้นหา -->
+<div class="mb-3">
+<input 
+type="text"
+id="skinSearch"
+class="form-control"
+placeholder="🔍 ค้นหา Skin..."
+onkeyup="searchSkin()">
+</div>
 
 <div id="skinGallery"></div>
-
+    
 <div class="text-center mt-2">
 <button class="btn btn-secondary" onclick="resetSkin()">
 ล้าง Skin
@@ -1031,6 +1049,26 @@ behavior:"smooth"
 },200);
 
 }
+  
+  function searchSkin(){
+
+let keyword = document.getElementById("skinSearch").value.toLowerCase();
+let skins = document.querySelectorAll(".skin-card");
+
+skins.forEach(function(card){
+
+let name = card.querySelector(".skin-name").innerText.toLowerCase();
+
+if(name.includes(keyword)){
+card.style.display = "flex";
+}else{
+card.style.display = "none";
+}
+
+});
+
+}
+  
 </script>
 
   <a href="#" onclick="calculateSkinWish();scrollToSkinResult();return false;"
@@ -1046,6 +1084,7 @@ class="floating-skinwish">
   
 </body>
 </html>
+
 
 
 
