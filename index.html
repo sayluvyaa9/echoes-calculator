@@ -364,6 +364,26 @@ gap:10px;
 z-index:999;
 }
 
+   /* ปุ่มกลับขึ้นด้านบน */
+.top-btn{
+width:38px;
+height:38px;
+padding:0;
+border-radius:50%;
+font-size:18px;
+display:flex;
+align-items:center;
+justify-content:center;
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+}
+
+.top-btn.show{
+opacity:1;
+pointer-events:auto;
+}
+
 .floating-menu a,
 .floating-menu button{
 background:linear-gradient(45deg,#ff6fb5,#ff9bd0);
@@ -444,6 +464,7 @@ border-radius:20px;
 padding:10px 15px;
 border:1px solid #ffc2dd;
 }
+  
     
 </style>
   
@@ -1066,11 +1087,21 @@ behavior:"smooth"
 });
 }
   
+window.addEventListener("scroll", function(){
+const btn = document.querySelector(".top-btn");
+
+if(window.scrollY > 200){
+btn.classList.add("show");
+}else{
+btn.classList.remove("show");
+}
+});
 </script>
+  
 
   <div class="floating-menu">
 
-<button onclick="scrollToTop()">⬆️</button>
+<button class="top-btn" onclick="scrollToTop()">⬆️</button>
 
 <a href="#" onclick="calculateSkinWish();scrollToSkinResult();return false;">
 ✨ คำนวณ Skin Wish
@@ -1085,21 +1116,5 @@ target="_blank">
   
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
