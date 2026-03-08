@@ -856,7 +856,7 @@ ${labels.map(l=>`<span class="badge bg-danger">${l}</span>`).join(" ")}
 <p>ยอดเติมเสียงสะท้อนรวม: ${best.topup.toLocaleString()}</p>
 
 <p class="price-note">
-*ราคาคำนวณเป็นเพียงราคาคาดการณ์ ในอนาคตอาจมีการเปลี่ยนแปลง*
+*เป็นเพียงราคาคาดการณ์ ในอนาคตอาจมีเปลี่ยนแปลง*
 </p>
 
 </div>
@@ -941,7 +941,16 @@ data-label="${skin.name}">
   
 {name:"Pet A", echo:888, img:"BlankATierPetCage.png"},
 {name:"Pet A", echo:788, img:"BlankATierPetCage.png"},
-{name:"Pet A", echo:710, img:"BlankATierPetCage.png"}
+{name:"Pet A", echo:710, img:"BlankATierPetCage.png"},
+
+{name:"Pet B", echo:488, img:"BlankBTierPetCage.png"},
+{name:"Pet B", echo:388, img:"BlankBTierPetCage.png"},
+
+{name:"Room S", echo:4888, img:"MistyVilla.png"},
+{name:"Room S ลด 20%", echo:3912, img:"MistyVilla.png"},
+{name:"Room S ลด 25%", echo:3688, img:"MistyVilla.png"},
+{name:"Room A", echo:3288, img:"PhanCast.png"},
+{name:"Room B", echo:968, img:"DustLadenOffice.png"},
 ];
 
   window.onload = function(){
@@ -966,6 +975,7 @@ loadSkins();
   
 </body>
 </html>
+
 
 
 
