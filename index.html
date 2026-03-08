@@ -454,6 +454,32 @@ border-radius:20px;
 padding:10px 15px;
 border:1px solid #ffc2dd;
 }
+
+    #scrollTopBtn{
+position:fixed;
+bottom:20px;
+right:20px;
+z-index:999;
+
+background:#ff6fa5;
+color:white;
+border:none;
+border-radius:50%;
+width:50px;
+height:50px;
+
+font-size:22px;
+cursor:pointer;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+
+display:none;
+transition:0.3s;
+}
+
+#scrollTopBtn:hover{
+background:#ff3f87;
+transform:scale(1.1);
+}
     
 </style>
   
@@ -1068,6 +1094,25 @@ card.style.display = "none";
 });
 
 }
+
+  window.onscroll = function(){
+
+let btn = document.getElementById("scrollTopBtn");
+
+if(document.documentElement.scrollTop > 200){
+btn.style.display = "block";
+}else{
+btn.style.display = "none";
+}
+
+};
+
+function scrollToTop(){
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
+}
   
 </script>
 
@@ -1081,9 +1126,12 @@ class="floating-skinwish">
    class="floating-contact">
    💬 ติดต่อสั่งเติมกับร้าน
 </a>
+
+  <button id="scrollTopBtn" onclick="scrollToTop()">⬆️</button>
   
 </body>
 </html>
+
 
 
 
