@@ -373,6 +373,27 @@ animation:floatBtn 2.5s ease-in-out infinite;
 background:#218838;
 color:white;
 }
+
+    .floating-skinwish{
+position:fixed;
+bottom:80px;
+right:20px;
+background:#ff9bd0;
+color:white;
+padding:14px 24px;
+border-radius:40px;
+font-size:16px;
+text-decoration:none;
+box-shadow:0 6px 15px rgba(0,0,0,0.25);
+z-index:999;
+animation:floatBtn 2.5s ease-in-out infinite;
+}
+
+.floating-skinwish:hover{
+transform:scale(1.08);
+background:#ff5fa8;
+color:white;
+}
     
     @keyframes floatBtn{
 0%{transform:translateY(0)}
@@ -509,12 +530,6 @@ font-size:14px;
 <p class="text-center skin-desc">เลือกสกินที่ต้องการ ระบบจะรวม Echoes ให้แล้วคำนวณสูตรเติมที่คุ้มที่สุด</p>
 
 <div id="skinGallery"></div>
-
-<div class="text-center mt-3">
-<button class="btn btn-primary" onclick="calculateSkinWish()">
-✨ คำนวณ Skin Wish
-</button>
-</div>
 
 <div class="text-center mt-2">
 <button class="btn btn-secondary" onclick="resetSkin()">
@@ -991,7 +1006,25 @@ document.querySelector(".dark-toggle").innerHTML="☀️";
 loadSkins();
 
 };
+  
+  function scrollToSkinResult(){
+
+setTimeout(function(){
+
+document.getElementById("skinResult")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+},200);
+
+}
 </script>
+
+  <a href="#" onclick="calculateSkinWish();scrollToSkinResult();return false;"
+class="floating-skinwish">
+✨ คำนวณ Skin Wish
+</a>
 
   <a href="https://www.facebook.com/share/1CEyAyv53R/?mibextid=wwXIfr"
    target="_blank"
@@ -1001,6 +1034,7 @@ loadSkins();
   
 </body>
 </html>
+
 
 
 
