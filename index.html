@@ -395,6 +395,38 @@ text-align:center;
 .dark-mode .price-note{
 color:#ffb6d9;
 }
+
+    .skin-card{
+display:flex;
+align-items:center;
+gap:12px;
+background:white;
+padding:12px;
+border-radius:14px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+margin-bottom:10px;
+}
+
+.skin-card img{
+width:70px;
+height:90px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.skin-info{
+flex:1;
+}
+
+.skin-name{
+font-weight:600;
+font-size:15px;
+}
+
+.skin-price{
+color:#777;
+font-size:14px;
+}
     
 </style>
   
@@ -476,7 +508,7 @@ color:#ffb6d9;
 <h4 class="text-center">🛍 Skin Gallery</h4>
 <p class="text-center skin-desc">เลือกสกินที่ต้องการ ระบบจะรวม Echoes ให้แล้วคำนวณสูตรเติมที่คุ้มที่สุด</p>
 
-<div class="row" id="skinGallery"></div>
+<div id="skinGallery"></div>
 
 <div class="text-center mt-3">
 <button class="btn btn-primary" onclick="calculateSkinWish()">
@@ -895,17 +927,14 @@ skins.forEach(skin=>{
 
 gallery.innerHTML += `
 
-<div class="col-md-4 col-6 mb-3">
-<div class="card">
+<div class="skin-card">
 
-<div class="card-img-box">
 <img src="${skin.img}">
+
+<div class="skin-info">
+<div class="skin-name">${skin.name}</div>
+<div class="skin-price">${skin.echo} Echoes</div>
 </div>
-
-<div class="card-body text-center">
-
-<h6>${skin.name}</h6>
-<p>${skin.echo} Echoes</p>
 
 <div class="skin-qty">
 <button onclick="changeQty(this,-1)">−</button>
@@ -919,11 +948,8 @@ data-label="${skin.name}">
 </div>
 
 </div>
-</div>
-</div>
 
 `;
-
 });
 
 }
@@ -975,6 +1001,7 @@ loadSkins();
   
 </body>
 </html>
+
 
 
 
