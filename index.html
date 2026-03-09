@@ -515,6 +515,27 @@ border:1px solid #ff9bd0;
 .dark-mode .skin-price{
 color:#ffb6d9;
 }
+
+    .pagination{
+display:flex;
+justify-content:center;
+gap:8px;
+margin-top:20px;
+flex-wrap:wrap;
+}
+
+.pagination button{
+padding:8px 14px;
+border-radius:10px;
+border:1px solid #d8b5c9;
+background:white;
+cursor:pointer;
+}
+
+.pagination button.active{
+background:#5f6f7d;
+color:white;
+}
     
 </style>
   
@@ -614,6 +635,14 @@ onkeyup="searchSkin()">
 </div>
 
 <div id="skinGallery"></div>
+
+    <div class="pagination">
+<button onclick="changePage(-1)">ก่อนหน้า</button>
+
+<span id="pageNumbers"></span>
+
+<button onclick="changePage(1)">ถัดไป</button>
+</div>
     
 <div class="text-center mt-2">
 <button class="btn btn-secondary" onclick="resetSkin()">
@@ -1064,6 +1093,7 @@ data-label="${skin.name}">
 {name:"Skin S ลด 40% + Acces S", echo:3025, img:"skins-access.png"},
 {name:"Skin S + Acces A", echo:2688, img:"skins-accesa.png"},
 {name:"Skin S ลด 40% + Acces A", echo:2459, img:"skins-accesa.png"},
+{name:"Skin S ซื้อประดับ S/A แล้ว", echo:1963, img:"BlankSTierCard.png"},
     
 {name:"Skin A", echo:1388, img:"BlankATierCard.png"},
 {name:"Skin A ลด 40%", echo:833, img:"BlankATierCard.png"},
@@ -1071,13 +1101,14 @@ data-label="${skin.name}">
 {name:"Skin A ลด 40% + Acces S", echo:2342, img:"skina-access.png"},
 {name:"Skin A + Acces A", echo:1968, img:"skina-accesa.png"},
 {name:"Skin A ลด 40% + Acces A", echo:1685, img:"skina-accesa.png"},
+{name:"Skin A ซื้อประดับ S/A แล้ว", echo:1110, img:"BlankATierCard.png"},
     
 {name:"Accessory S", echo:1888, img:"BlankSTierAccessoryCard.png"},
 {name:"Accessory A", echo:1068, img:"BlankATierAccessoryCard.png"},
-{name:"Acces S ในแพ็ก S+S", echo:1292, img:"BlankSTierAccessoryCard.png"},
-{name:"Acces A ในแพ็ก S+A", echo:726, img:"BlankATierAccessoryCard.png"},
-{name:"Acces S ในแพ็ก A+S", echo:1509, img:"BlankSTierAccessoryCard.png"},
-{name:"Acces A ในแพ็ก A+A", echo:852, img:"BlankATierAccessoryCard.png"},
+{name:"Acces S ซื้อสกิน S แล้ว", echo:1292, img:"BlankSTierAccessoryCard.png"},
+{name:"Acces A ซื้อสกิน S แล้ว", echo:726, img:"BlankATierAccessoryCard.png"},
+{name:"Acces S ซื้อสกิน A แล้ว", echo:1509, img:"BlankSTierAccessoryCard.png"},
+{name:"Acces A ซื้อสกิน A แล้ว", echo:852, img:"BlankATierAccessoryCard.png"},
   
 {name:"Pet A", echo:888, img:"BlankATierPetCage.png"},
 {name:"Pet A", echo:788, img:"BlankATierPetCage.png"},
@@ -1103,6 +1134,8 @@ document.querySelector(".dark-toggle").innerHTML="☀️";
 }
 
 loadSkins();
+
+showPage(1); // 👈 เพิ่มบรรทัดนี้
 
 };
   
@@ -1154,6 +1187,65 @@ btn.classList.add("show");
 btn.classList.remove("show");
 }
 });
+
+  // ===== Pagination Skin Gallery =====
+
+let currentPage = 1;
+let skinsPerPage = 10;
+
+function showPage(page){
+
+let skins = document.querySelectorAll(".skin-card");
+let totalPages = Math.ceil(skins.length / skinsPerPage);
+
+if(page < 1) page = 1;
+if(page > totalPages) page = totalPages;
+
+currentPage = page;
+
+skins.forEach((skin,index)=>{
+
+skin.style.display="none";
+
+let start = (page-1)*skinsPerPage;
+let end = start + skinsPerPage;
+
+if(index >= start && index < end){
+skin.style.display="flex";
+}
+
+});
+
+renderPageNumbers(totalPages);
+}
+
+function renderPageNumbers(totalPages){
+
+let container = document.getElementById("pageNumbers");
+container.innerHTML="";
+
+for(let i=1;i<=totalPages;i++){
+
+let btn=document.createElement("button");
+
+btn.innerText=i;
+
+if(i===currentPage){
+btn.classList.add("active");
+}
+
+btn.onclick=()=>showPage(i);
+
+container.appendChild(btn);
+
+}
+
+}
+
+function changePage(step){
+showPage(currentPage + step);
+}
+  
 </script>
 
 <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
@@ -1175,9 +1267,5 @@ target="_blank">
   
 </body>
 </html>
-
-
-
-
 
 
