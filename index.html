@@ -757,7 +757,7 @@ onkeyup="searchSkin()">
     let lower = options
 .filter(o=>o.price < budget)
 .sort((a,b)=> b.price - a.price)[0];
-    let equal = options.filter(o => o.price === budget);
+    let equal = options.find(o => o.price === budget);
     let higher = options
 .filter(o=>o.price > budget)
 .sort((a,b)=> a.price - b.price)[0];
@@ -1276,6 +1276,7 @@ target="_blank">
   
 </body>
 </html>
+
 
 
 
