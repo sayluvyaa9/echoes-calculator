@@ -665,6 +665,10 @@ onkeyup="searchSkin()">
 </footer>
 
 <script>
+  function formatNum(num){
+  return num.toLocaleString("en-US");
+}
+  
   const echoTopup = { 66: 60, 203: 185, 335: 305, 759: 690 };
   const prices = { 66: 30, 203: 85, 335: 140, 759: 280 };
 
@@ -721,9 +725,9 @@ onkeyup="searchSkin()">
     let best = options[0];
     document.getElementById("result").innerHTML = `
 <p>💡 สูตรที่เลือก: ${best.desc}</p>
-<p>🧷 รวมทั้งหมด: ${best.echoes.toLocaleString()} กระดุม</p>
-<p>💸 ราคารวม: ${best.price.toLocaleString()} บาท</p>
-<p>🔊 ยอดเติมเสียงสะท้อนรวม: ${best.topup.toLocaleString()}</p>`;
+<p>🧷 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>💸 ราคารวม: ${formatNum(best.price)} บาท</p>
+<p>🔊 ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>`;
   }
 
   function calculateTopup() {
@@ -737,9 +741,9 @@ onkeyup="searchSkin()">
     let best = options[0];
       document.getElementById("result").innerHTML = `
 <p>💡 สูตรที่เลือก: ${best.desc}</p>
-<p>🧷 รวมทั้งหมด: ${best.echoes.toLocaleString()} กระดุม</p>
-<p>💸 ราคารวม: ${best.price.toLocaleString()} บาท</p>
-<p>🔊 ยอดเติมเสียงสะท้อนรวม: ${best.topup.toLocaleString()}</p>`;
+<p>🧷 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>💸 ราคารวม: ${formatNum(best.price)} บาท</p>
+<p>🔊 ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>`;
   }
 
   function calculateBudget() {
@@ -783,18 +787,15 @@ onkeyup="searchSkin()">
   let best = options[0];
 
   // จัดรูปแบบแพ็กให้อ่านง่าย (มีเว้นวรรค)
-  let formattedDesc = best.desc
-      .replace(/x/g," x ")
-      .replace(/\s+/g," ")
-      .trim();
+  let formattedDesc = best.desc;
 
   let totalBalls = (specialPack * 10) + normalBalls;
 
   document.getElementById("result").innerHTML = `
     <p>💡 สูตรที่เลือก: ${formattedDesc}</p>
-<p>🧷 รวมทั้งหมด: ${best.echoes.toLocaleString()} กระดุม</p>
-<p>💸 ราคารวม: ${best.price.toLocaleString()} บาท</p>
-<p>🔊 ยอดเติมเสียงสะท้อนรวม: ${best.topup.toLocaleString()}</p>
+<p>🧷 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>💸 ราคารวม: ${formatNum(best.price)} บาท</p>
+<p>🔊 ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>
 
     <hr>
 
@@ -1008,16 +1009,11 @@ ${labels.map(l=>`<span class="badge bg-danger">${l}</span>`).join(" ")}
 
 <hr>
 
-<p>กระดุมที่ต้องใช้รวม: ${totalEchoes.toLocaleString()}</p>
-
+<p>กระดุมที่ต้องใช้รวม: ${formatNum(totalEchoes)}</p>
 <p>สูตรเติมคุ้มสุด: ${best.desc}</p>
-
-<p>รวมทั้งหมด: ${best.echoes.toLocaleString()} กระดุม</p>
-
-<p>ราคารวม: ${best.price.toLocaleString()} บาท</p>
-
-<p>ยอดเติมเสียงสะท้อนรวม: ${best.topup.toLocaleString()}</p>
-
+<p>รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>ราคารวม: ${formatNum(best.price)} บาท</p>
+<p>ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>
 <p class="price-note">
 *เป็นเพียงราคาคาดการณ์ ในอนาคตอาจมีเปลี่ยนแปลง*
 </p>
@@ -1026,7 +1022,7 @@ ${labels.map(l=>`<span class="badge bg-danger">${l}</span>`).join(" ")}
 `;
 }
 
-  function changeQty(btn,delta){
+function changeQty(btn,delta){
 
 let qtyEl = btn.parentElement.querySelector(".qty");
 
@@ -1153,9 +1149,10 @@ behavior:"smooth"
 
 }
   
-  function searchSkin(){
+ function searchSkin(){
 
 let keyword = document.getElementById("skinSearch").value.toLowerCase();
+
 let skins = document.querySelectorAll(".skin-card");
 
 skins.forEach(function(card){
@@ -1163,12 +1160,14 @@ skins.forEach(function(card){
 let name = card.querySelector(".skin-name").innerText.toLowerCase();
 
 if(name.includes(keyword)){
-card.style.display = "flex";
+card.dataset.match = "true";
 }else{
-card.style.display = "none";
+card.dataset.match = "false";
 }
 
 });
+
+showPage(1);
 
 }
 
@@ -1196,7 +1195,9 @@ let skinsPerPage = 10;
 
 function showPage(page){
 
-let skins = document.querySelectorAll(".skin-card");
+let skins = Array.from(document.querySelectorAll(".skin-card"))
+.filter(s => s.dataset.match !== "false");
+
 let totalPages = Math.ceil(skins.length / skinsPerPage);
 
 if(page < 1) page = 1;
@@ -1204,9 +1205,9 @@ if(page > totalPages) page = totalPages;
 
 currentPage = page;
 
-skins.forEach((skin,index)=>{
+document.querySelectorAll(".skin-card").forEach(s=>s.style.display="none");
 
-skin.style.display="none";
+skins.forEach((skin,index)=>{
 
 let start = (page-1)*skinsPerPage;
 let end = start + skinsPerPage;
@@ -1268,6 +1269,7 @@ target="_blank">
   
 </body>
 </html>
+
 
 
 
