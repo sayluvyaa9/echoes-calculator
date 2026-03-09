@@ -756,11 +756,19 @@ onkeyup="searchSkin()">
 
     let lower = options
 .filter(o=>o.price < budget)
-.sort((a,b)=> b.price - a.price)[0];
-    let equal = options.find(o => o.price === budget);
+.sort((a,b)=> 
+   b.price - a.price || b.echoes - a.echoes
+)[0];
+    
+    let equal = options
+.filter(o=>o.price === budget)
+.sort((a,b)=> b.echoes - a.echoes)[0];
+    
     let higher = options
 .filter(o=>o.price > budget)
-.sort((a,b)=> a.price - b.price)[0];
+.sort((a,b)=> 
+   a.price - b.price || b.echoes - a.echoes
+)[0];
 
     let html = "<table class='table table-bordered'><thead><tr><th>ตัวเลือก</th><th>สูตร</th><th>ราคา</th><th>กระดุมรวม</th><th>ยอดเติมเสียงสะท้อน</th></tr></thead><tbody>";
     if (lower) html += `<tr><td>ต่ำกว่า</td><td>${lower.desc}</td><td>${lower.price} บาท</td><td>${lower.echoes}</td><td>${lower.topup}</td></tr>`;
@@ -1276,6 +1284,7 @@ target="_blank">
   
 </body>
 </html>
+
 
 
 
