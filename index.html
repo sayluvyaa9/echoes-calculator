@@ -652,6 +652,12 @@ onkeyup="searchSkin()">
 
 <div id="skinResult" class="mt-3"></div>
 
+<div id="remainEchoBox" style="display:none; margin-top:10px;">
+<label class="form-label">กระดุมที่มีอยู่ในไอดี</label>
+<input type="number" id="remainEcho" class="form-control" placeholder="เช่น 500">
+<button class="btn btn-primary mt-2" onclick="recalculateSkin()">คำนวณใหม่</button>
+</div>
+
 </div>      
 </div>
     </div>
@@ -1003,6 +1009,7 @@ if(totalEchoes===0){
 document.getElementById("skinResult").innerText="กรุณาเลือกสกิน";
 return;
 }
+document.getElementById("remainEchoBox").style.display="block";
 
 let options = generateOptions("buttons", totalEchoes)
                 .filter(o=>o.echoes>=totalEchoes);
@@ -1032,6 +1039,57 @@ ${labels.map(l=>`<span class="badge bg-danger">${l}</span>`).join(" ")}
 
 </div>
 `;
+}
+
+  function recalculateSkin(){
+
+let remain = parseInt(document.getElementById("remainEcho").value) || 0;
+
+let skins = document.querySelectorAll(".skin-data");
+
+let totalEchoes=0;
+
+skins.forEach(s=>{
+
+let qty = parseInt(
+s.previousElementSibling.querySelector(".qty").innerText
+);
+
+if(qty>0){
+let echo = parseInt(s.dataset.echo);
+totalEchoes += echo*qty;
+}
+
+});
+
+let needEchoes = totalEchoes - remain;
+
+if(needEchoes < 0) needEchoes = 0;
+
+let options = generateOptions("buttons", needEchoes)
+.filter(o=>o.echoes>=needEchoes);
+
+options.sort((a,b)=>a.price-b.price);
+
+let best = options[0];
+
+document.getElementById("skinResult").innerHTML=`
+
+<p>กระดุมที่ต้องใช้รวม: ${formatNum(totalEchoes)}</p>
+
+<p>กระดุมติดที่มีในไอดี: ${formatNum(remain)}</p>
+
+<p><strong>ต้องเติมเพิ่ม: ${formatNum(needEchoes)}</strong></p>
+
+<hr>
+
+<p>สูตรเติมคุ้มสุด: ${best.desc}</p>
+<p>รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>ราคารวม: ${formatNum(best.price)} บาท</p>
+<p>ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>
+
+`;
+
 }
 
 function changeQty(btn,delta){
@@ -1284,6 +1342,7 @@ target="_blank">
   
 </body>
 </html>
+
 
 
 
