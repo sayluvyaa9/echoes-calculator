@@ -731,7 +731,7 @@ onkeyup="searchSkin()">
     let best = options[0];
     document.getElementById("result").innerHTML = `
 <p>💡 สูตรที่เลือก: ${best.desc}</p>
-<p>🧷 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>🔴 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
 <p>💸 ราคารวม: ${formatNum(best.price)} บาท</p>
 <p>🔊 ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>`;
   }
@@ -747,7 +747,7 @@ onkeyup="searchSkin()">
     let best = options[0];
       document.getElementById("result").innerHTML = `
 <p>💡 สูตรที่เลือก: ${best.desc}</p>
-<p>🧷 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>🔴 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
 <p>💸 ราคารวม: ${formatNum(best.price)} บาท</p>
 <p>🔊 ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>`;
   }
@@ -810,8 +810,8 @@ onkeyup="searchSkin()">
   let totalBalls = (specialPack * 10) + normalBalls;
 
   document.getElementById("result").innerHTML = `
-    <p>💡 สูตรที่เลือก: ${formattedDesc}</p>
-<p>🧷 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>💡 สูตรที่เลือก: ${formattedDesc}</p>
+<p>🔴 รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
 <p>💸 ราคารวม: ${formatNum(best.price)} บาท</p>
 <p>🔊 ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>
 
@@ -1156,7 +1156,7 @@ data-label="${skin.name}">
 {name:"Skin S", echo:2888, img:"skins.png"},
 {name:"Skin S ลด 40%", echo:1733, img:"skins.png"},
 {name:"Skin S ลด 50%", echo:1444, img:"skins.png"},
-{name:"Skin S ลด 388echoes", echo:2500, img:"skins.png"},
+{name:"Skin S ลด 388🔴", echo:2500, img:"skins.png"},
 {name:"Skin S ลด 25%", echo:2158, img:"skins.png"},
 {name:"Skin S + Acces A + Character", echo:3288, img:"skins-accesa+cha.png"},
 {name:"Skin S + Acces S", echo:3268, img:"skins-access.png"},
@@ -1168,7 +1168,7 @@ data-label="${skin.name}">
 {name:"Skin A", echo:1388, img:"skina.png"},
 {name:"Skin A ลด 40%", echo:833, img:"skina.png"},
 {name:"Skin A ลด 50%", echo:694, img:"skina.png"},
-{name:"Skin A ลด 388echoes", echo:1000, img:"skina.png"},
+{name:"Skin A ลด 388🔴", echo:1000, img:"skina.png"},
 {name:"Skin A ลด 15%", echo:1178, img:"skina.png"},
 {name:"Skin A 988echoes ", echo:988, img:"skina.png"},
 {name:"Skin A + Acces S", echo:2618, img:"skina-access.png"},
