@@ -896,19 +896,12 @@ function calculateGacha() {
     let diffPrice = better.price - best.price;
     let diffEcho = better.echoes - best.echoes;
 
-    // 🎯 คิดจำนวนลูกกาชาที่เพิ่ม
-    let extraBalls = Math.floor(diffEcho / 96);
-
     html += `
     <hr>
 
     <p style="color:#ff4fa3;font-weight:600;">
     🔥 เพิ่มเงินอีก ${diffPrice} บาท  
     เพื่อได้ +${diffEcho} echoes
-    </p>
-
-    <p style="font-weight:600;">
-    🎯 ได้เพิ่ม +${extraBalls} ลูกกาชา
     </p>
 
     <p>✨ สูตรแนะนำ: ${better.desc}</p>
