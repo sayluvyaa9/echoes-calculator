@@ -1173,17 +1173,25 @@ function recalculateSkin(){
     return;
   }
 
-  let html = `
-  <div>
-  <p><strong>Skin ที่เลือก</strong></p>
-  ${labels.map(l=>`<span class="badge bg-danger">${l}</span>`).join(" ")}
+let html = `
+<div>
 
-  <hr>
+<p><strong>Skin ที่เลือก</strong></p>
+${labels.map(l=>`<span class="badge bg-danger">${l}</span>`).join(" ")}
 
-  <p>กระดุมที่ต้องใช้: ${formatNum(needEchoes)}</p>
-  <p>💡 สูตร: ${best.desc}</p>
-  <p>💸 ราคา: ${formatNum(best.price)} บาท</p>
-  `;
+<hr>
+
+<p>สูตรเติมคุ้มสุด: ${best.desc}</p>
+<p>รวมทั้งหมด: ${formatNum(best.echoes)} กระดุม</p>
+<p>ราคารวม: ${formatNum(best.price)} บาท</p>
+<p>ยอดเติมเสียงสะท้อนรวม: ${formatNum(best.topup)}</p>
+
+<p class="price-note">
+*เป็นเพียงราคาคาดการณ์ ในอนาคตอาจมีเปลี่ยนแปลง*
+</p>
+
+</div>
+`;;
 
   html += `</div>`;
 
