@@ -1173,8 +1173,6 @@ function recalculateSkin(){
     return;
   }
 
-  let better = findBetterOption(options, best, 10);
-
   let html = `
   <div>
   <p><strong>Skin ที่เลือก</strong></p>
@@ -1186,13 +1184,6 @@ function recalculateSkin(){
   <p>💡 สูตร: ${best.desc}</p>
   <p>💸 ราคา: ${formatNum(best.price)} บาท</p>
   `;
-
-  if(better){
-    html += `
-    <hr>
-    🔥 เพิ่ม ${better.price - best.price} บาท → ได้เพิ่ม ${better.echoes - best.echoes}
-    `;
-  }
 
   html += `</div>`;
 
