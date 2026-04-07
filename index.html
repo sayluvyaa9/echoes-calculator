@@ -496,9 +496,10 @@ transition:all 0.5s ease;
 }
 
 #resultBox.show{
-max-height:500px;
-opacity:1;
-transform:translateY(0);
+  max-height:500px;
+  overflow-y:auto;   /* ✅ เพิ่มอันนี้ */
+  opacity:1;
+  transform:translateY(0);
 }
 
 .dark-mode .skin-name{
