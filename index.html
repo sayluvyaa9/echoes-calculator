@@ -694,7 +694,10 @@ onkeyup="searchSkin()">
     for (let c66=0;c66<=2;c66++) {
       for (let c203=0;c203<=2;c203++) {
         for (let c335=0;c335<=1;c335++) {
-         for (let c759 = Math.max(0, maxBig - 5); c759 <= maxBig; c759++) {
+         let start = Math.max(0, maxBig - 20);
+let end = maxBig + 5;
+
+for (let c759 = start; c759 <= end; c759++) {
             // ❌ กันสูตรที่ 66, 203, 335 อยู่พร้อมกัน และมีตัวใดตัวหนึ่ง >=2
 if (
   c66 > 0 &&
