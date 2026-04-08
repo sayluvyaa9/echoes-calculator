@@ -694,7 +694,15 @@ onkeyup="searchSkin()">
     for (let c66=0;c66<=2;c66++) {
       for (let c203=0;c203<=2;c203++) {
         for (let c335=0;c335<=1;c335++) {
-          for (let c759=0;c759<=maxBig;c759++) {
+         for (let c759 = Math.max(0, maxBig - 5); c759 <= maxBig; c759++) {
+            // ❌ กันสูตรที่ 66, 203, 335 อยู่พร้อมกัน และมีตัวใดตัวหนึ่ง >=2
+if (
+  c66 > 0 &&
+  c203 > 0 &&
+  c335 > 0 &&
+  (c66 >= 2 || c203 >= 2 || c335 >= 2)
+) continue;
+            
             let echoes = c66*66 + c203*203 + c335*335 + c759*759;
             let topup = c66*echoTopup[66] + c203*echoTopup[203] + c335*echoTopup[335] + c759*echoTopup[759];
 
